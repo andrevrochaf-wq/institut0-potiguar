@@ -30,6 +30,8 @@ jobs:
 
       - name: Build
         working-directory: frontend
+        env:
+          NEXT_PUBLIC_API_URL: https://institut0-potiguar-1.onrender.com
         run: npm run build
 
       - name: Upload artifact
