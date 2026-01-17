@@ -34,18 +34,14 @@ jobs:
           NEXT_PUBLIC_API_URL: https://institut0-potiguar-1.onrender.com
         run: npm run build
 
-      - name: Ensure project basePath folder
+      - name: Flatten basePath output
         run: |
-          if [ ! -f "frontend/out/institut0-potiguar/index.html" ] && [ -f "frontend/out/index.html" ]; then
-            mkdir -p frontend/out/institut0-potiguar
+          if [ -d "frontend/out/institut0-potiguar" ]; then
             shopt -s dotglob nullglob
-            for item in frontend/out/*; do
-              base="$(basename "$item")"
-              if [ "$base" = "." ] || [ "$base" = ".." ] || [ "$base" = "institut0-potiguar" ]; then
-                continue
-              fi
-              mv "$item" frontend/out/institut0-potiguar/
+            for item in frontend/out/institut0-potiguar/*; do
+              mv "$item" frontend/out/
             done
+            rmdir frontend/out/institut0-potiguar || true
           fi
 
       - name: Upload artifact
