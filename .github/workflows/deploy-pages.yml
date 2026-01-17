@@ -38,7 +38,8 @@ jobs:
         run: |
           if [ ! -f "frontend/out/institut0-potiguar/index.html" ] && [ -f "frontend/out/index.html" ]; then
             mkdir -p frontend/out/institut0-potiguar
-            for item in frontend/out/* frontend/out/.*; do
+            shopt -s dotglob nullglob
+            for item in frontend/out/*; do
               base="$(basename "$item")"
               if [ "$base" = "." ] || [ "$base" = ".." ] || [ "$base" = "institut0-potiguar" ]; then
                 continue
