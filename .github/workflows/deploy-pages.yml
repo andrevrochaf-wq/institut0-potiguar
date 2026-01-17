@@ -34,6 +34,13 @@ jobs:
           NEXT_PUBLIC_API_URL: https://institut0-potiguar-1.onrender.com
         run: npm run build
 
+      - name: List build output
+        run: |
+          ls -la frontend/out
+          if [ -d "frontend/out/institut0-potiguar" ]; then
+            ls -la frontend/out/institut0-potiguar
+          fi
+
       - name: Flatten basePath output
         run: |
           if [ -d "frontend/out/institut0-potiguar" ]; then
