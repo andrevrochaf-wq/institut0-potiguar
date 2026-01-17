@@ -25,7 +25,18 @@ export default function LoginPage() {
       });
 
       if (!res.ok) {
-        throw new Error('Credenciais invalidas');
+        let message = 'Nao foi possivel autenticar. Verifique os dados.';
+        try {
+          const data = await res.json();
+          if (Array.isArray(data?.message)) {
+            message = data.message.join(' ');
+          } else if (typeof data?.message === 'string') {
+            message = data.message;
+          }
+        } catch {
+          // keep default message
+        }
+        throw new Error(message);
       }
 
       const data = await res.json();
@@ -33,7 +44,7 @@ export default function LoginPage() {
       window.localStorage.setItem('ip_user', JSON.stringify(data.user));
       router.replace('/dashboard');
     } catch (err) {
-      setError('Nao foi possivel autenticar. Verifique os dados.');
+      setError(err instanceof Error ? err.message : 'Nao foi possivel autenticar. Verifique os dados.');
     } finally {
       setLoading(false);
     }
