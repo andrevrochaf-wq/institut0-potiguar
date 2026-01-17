@@ -38,11 +38,12 @@ jobs:
         run: |
           if [ -d "frontend/out/institut0-potiguar" ]; then
             shopt -s dotglob nullglob
-            for item in frontend/out/institut0-potiguar/*; do
-              mv "$item" frontend/out/
-            done
-            rmdir frontend/out/institut0-potiguar || true
+            cp -R frontend/out/institut0-potiguar/* frontend/out/
+            rm -rf frontend/out/institut0-potiguar
           fi
+
+      - name: Disable Jekyll
+        run: touch frontend/out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
