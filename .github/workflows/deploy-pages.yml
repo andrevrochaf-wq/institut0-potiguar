@@ -38,8 +38,13 @@ jobs:
         run: |
           if [ ! -f "frontend/out/institut0-potiguar/index.html" ] && [ -f "frontend/out/index.html" ]; then
             mkdir -p frontend/out/institut0-potiguar
-            shopt -s dotglob
-            mv frontend/out/* frontend/out/institut0-potiguar/
+            for item in frontend/out/* frontend/out/.*; do
+              base="$(basename "$item")"
+              if [ "$base" = "." ] || [ "$base" = ".." ] || [ "$base" = "institut0-potiguar" ]; then
+                continue
+              fi
+              mv "$item" frontend/out/institut0-potiguar/
+            done
           fi
 
       - name: Upload artifact
