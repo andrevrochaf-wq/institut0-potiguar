@@ -26,12 +26,23 @@ export default function RegisterPage() {
       });
 
       if (!res.ok) {
-        throw new Error('Falha ao cadastrar');
+        let message = 'Nao foi possivel criar o cadastro.';
+        try {
+          const data = await res.json();
+          if (Array.isArray(data?.message)) {
+            message = data.message.join(' ');
+          } else if (typeof data?.message === 'string') {
+            message = data.message;
+          }
+        } catch {
+          // keep default message
+        }
+        throw new Error(message);
       }
 
       router.replace('/login');
     } catch (err) {
-      setError('Nao foi possivel criar o cadastro.');
+      setError(err instanceof Error ? err.message : 'Nao foi possivel criar o cadastro.');
     } finally {
       setLoading(false);
     }
