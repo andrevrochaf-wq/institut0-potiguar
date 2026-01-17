@@ -34,6 +34,14 @@ jobs:
           NEXT_PUBLIC_API_URL: https://institut0-potiguar-1.onrender.com
         run: npm run build
 
+      - name: Ensure project basePath folder
+        run: |
+          if [ ! -f "frontend/out/institut0-potiguar/index.html" ] && [ -f "frontend/out/index.html" ]; then
+            mkdir -p frontend/out/institut0-potiguar
+            shopt -s dotglob
+            mv frontend/out/* frontend/out/institut0-potiguar/
+          fi
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
