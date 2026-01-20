@@ -15,10 +15,13 @@ export class ContractsService {
   async create(dto: CreateContractDto): Promise<Contract> {
     const contract = this.contractsRepo.create({
       collaboratorId: dto.collaboratorId,
+      cityId: dto.cityId,
+      bankName: dto.bankName,
+      contractType: dto.contractType,
       templateId: dto.templateId ?? null,
-      startDate: dto.startDate ?? null,
+      startDate: dto.startDate,
       endDate: dto.endDate ?? null,
-      amount: dto.amount ?? null,
+      amount: dto.amount,
       status: 'draft',
     });
 
@@ -51,5 +54,17 @@ export class ContractsService {
     const contract = await this.findOne(id);
     contract.status = 'cancelled';
     await this.contractsRepo.save(contract);
+  }
+
+  async sign(id: string): Promise<Contract> {
+    const contract = await this.findOne(id);
+    contract.status = 'signed';
+    return this.contractsRepo.save(contract);
+  }
+
+  async close(id: string): Promise<Contract> {
+    const contract = await this.findOne(id);
+    contract.status = 'closed';
+    return this.contractsRepo.save(contract);
   }
 }

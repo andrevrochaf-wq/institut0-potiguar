@@ -163,11 +163,14 @@ CREATE TABLE IF NOT EXISTS contract_templates (
 CREATE TABLE IF NOT EXISTS contracts (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   collaborator_id UUID NOT NULL REFERENCES collaborators(id),
+  city_id UUID NOT NULL REFERENCES cities(id),
+  bank_name TEXT NOT NULL,
+  contract_type TEXT NOT NULL,
   template_id UUID REFERENCES contract_templates(id),
   status TEXT NOT NULL DEFAULT 'draft',
-  start_date DATE,
+  start_date DATE NOT NULL,
   end_date DATE,
-  amount NUMERIC(12,2),
+  amount NUMERIC(12,2) NOT NULL,
   pdf_url TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()

@@ -41,4 +41,16 @@ export class ContractsController {
     await this.contractsService.cancel(id);
     return { status: 'ok' };
   }
+
+  @Post(':id/sign')
+  @Permissions('contratos.update')
+  async sign(@Param('id') id: string) {
+    return this.contractsService.sign(id);
+  }
+
+  @Post(':id/close')
+  @Permissions('contratos.update')
+  async close(@Param('id') id: string) {
+    return this.contractsService.close(id);
+  }
 }
