@@ -55,12 +55,27 @@ export default function CidadesPage() {
         },
         body: JSON.stringify({ name, state }),
       });
-      if (!res.ok) throw new Error('Falha');
+      if (!res.ok) {
+        let message = 'Nao foi possivel salvar cidade.';
+        try {
+          const data = await res.json();
+          if (Array.isArray(data?.message)) {
+            message = data.message.join(' ');
+          } else if (typeof data?.message === 'string') {
+            message = data.message;
+          } else if (typeof data?.error === 'string') {
+            message = data.error;
+          }
+        } catch {
+          // keep default message
+        }
+        throw new Error(message);
+      }
       setName('');
       setState('');
       await load();
     } catch (err) {
-      setError('Nao foi possivel salvar cidade.');
+      setError(err instanceof Error ? err.message : 'Nao foi possivel salvar cidade.');
     }
   }
 
