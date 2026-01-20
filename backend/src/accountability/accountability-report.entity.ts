@@ -17,8 +17,17 @@ export class AccountabilityReport {
   @Column({ name: 'city_id', type: 'uuid', nullable: true })
   cityId: string | null;
 
-  @Column({ name: 'secretariat_id', type: 'uuid', nullable: true })
-  secretariatId: string | null;
+  @Column({ name: 'project_id', type: 'uuid', nullable: true })
+  projectId: string | null;
+
+  @Column({ name: 'secretariat_type', type: 'text' })
+  secretariatType: string;
+
+  @Column({ name: 'responsible_name', type: 'text' })
+  responsibleName: string;
+
+  @Column({ name: 'object_description', type: 'text', nullable: true })
+  objectDescription: string | null;
 
   @Column({ name: 'competency_month', type: 'int' })
   competencyMonth: number;
@@ -28,6 +37,9 @@ export class AccountabilityReport {
 
   @Column({ type: 'text', default: 'draft' })
   status: string;
+
+  @Column({ name: 'pdf_url', type: 'text', nullable: true })
+  pdfUrl: string | null;
 
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;

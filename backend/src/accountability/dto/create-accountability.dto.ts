@@ -1,16 +1,25 @@
-import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class CreateAccountabilityDto {
   @IsString()
   title: string;
 
-  @IsOptional()
   @IsString()
-  cityId?: string;
+  cityId: string;
+
+  @IsString()
+  projectId: string;
+
+  @IsString()
+  @IsIn(['education', 'social_assistance'])
+  secretariatType: string;
+
+  @IsString()
+  responsibleName: string;
 
   @IsOptional()
   @IsString()
-  secretariatId?: string;
+  objectDescription?: string;
 
   @IsInt()
   @Min(1)

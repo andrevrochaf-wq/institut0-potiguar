@@ -187,10 +187,14 @@ CREATE TABLE IF NOT EXISTS accountability_reports (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   city_id UUID REFERENCES cities(id),
-  secretariat_id UUID REFERENCES secretariats(id),
+  project_id UUID REFERENCES projects(id),
+  secretariat_type TEXT NOT NULL,
+  responsible_name TEXT NOT NULL,
+  object_description TEXT,
   competency_month INTEGER NOT NULL,
   competency_year INTEGER NOT NULL,
   status TEXT NOT NULL DEFAULT 'draft',
+  pdf_url TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -201,6 +205,18 @@ CREATE TABLE IF NOT EXISTS accountability_attachments (
   file_url TEXT NOT NULL,
   file_name TEXT NOT NULL,
   metadata JSONB,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE IF NOT EXISTS accountability_aps_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  report_id UUID NOT NULL REFERENCES accountability_reports(id) ON DELETE CASCADE,
+  aps_id UUID NOT NULL REFERENCES aps_catalog(id),
+  aps_code TEXT NOT NULL,
+  aps_title TEXT NOT NULL,
+  description TEXT,
+  amount NUMERIC(12,2) NOT NULL,
+  notes TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 

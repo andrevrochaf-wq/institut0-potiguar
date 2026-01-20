@@ -1,4 +1,4 @@
-import { IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
+import { IsIn, IsInt, IsOptional, IsString, Max, Min } from 'class-validator';
 
 export class UpdateAccountabilityDto {
   @IsOptional()
@@ -11,7 +11,20 @@ export class UpdateAccountabilityDto {
 
   @IsOptional()
   @IsString()
-  secretariatId?: string;
+  projectId?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['education', 'social_assistance'])
+  secretariatType?: string;
+
+  @IsOptional()
+  @IsString()
+  responsibleName?: string;
+
+  @IsOptional()
+  @IsString()
+  objectDescription?: string;
 
   @IsOptional()
   @IsInt()
@@ -28,4 +41,8 @@ export class UpdateAccountabilityDto {
   @IsOptional()
   @IsString()
   status?: string;
+
+  @IsOptional()
+  @IsString()
+  pdfUrl?: string;
 }
