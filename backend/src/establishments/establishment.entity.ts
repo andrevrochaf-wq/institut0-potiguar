@@ -23,6 +23,12 @@ export class Establishment {
   @Column({ type: 'text', default: 'active' })
   status: string;
 
+  @Column({ name: 'total_students', type: 'integer', default: 0 })
+  totalStudents: number;
+
+  @Column({ name: 'total_classes', type: 'integer', default: 0 })
+  totalClasses: number;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
 

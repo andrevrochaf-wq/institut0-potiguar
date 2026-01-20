@@ -95,6 +95,8 @@ CREATE TABLE IF NOT EXISTS establishments (
   inep_code TEXT UNIQUE,
   city_id UUID REFERENCES cities(id),
   status TEXT NOT NULL DEFAULT 'active',
+  total_students INTEGER NOT NULL DEFAULT 0,
+  total_classes INTEGER NOT NULL DEFAULT 0,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -113,6 +115,7 @@ CREATE TABLE IF NOT EXISTS establishment_classes (
   name TEXT NOT NULL,
   shift TEXT NOT NULL, -- morning/afternoon/night
   total_students INTEGER NOT NULL DEFAULT 0,
+  active BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
