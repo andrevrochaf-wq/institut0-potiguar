@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 const menu = [
@@ -137,13 +138,13 @@ export default function AppLayout({
                 <span className="pill">Em breve</span>
               ) : (
                 section.items.map((item) => (
-                  <a
+                  <Link
                     key={item.href}
                     href={item.href}
                     className={`sidebar-item ${current === item.href ? 'active' : ''}`}
                   >
                     <span>{item.label}</span>
-                  </a>
+                  </Link>
                 ))
               )}
             </div>
