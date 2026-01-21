@@ -207,11 +207,11 @@ export default function EstabelecimentosPage() {
     setClassForms((prev) => ({
       ...prev,
       [stageId]: {
-        name: '',
-        shift: 'Matutino',
-        students: '',
-        active: true,
         ...prev[stageId],
+        name: prev[stageId]?.name ?? '',
+        shift: prev[stageId]?.shift ?? 'Matutino',
+        students: prev[stageId]?.students ?? '',
+        active: prev[stageId]?.active ?? true,
         ...updates,
       },
     }));
