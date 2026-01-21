@@ -6,7 +6,7 @@ export class CreateEstablishmentClassDto {
   name: string;
 
   @IsString()
-  @IsIn(['Manha', 'Tarde', 'Noite', 'Integral'])
+  @IsIn(['Matutino', 'Vespertino', 'Noturno'])
   shift: string;
 
   @IsString()

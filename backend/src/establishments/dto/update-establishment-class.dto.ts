@@ -8,7 +8,7 @@ export class UpdateEstablishmentClassDto {
 
   @IsOptional()
   @IsString()
-  @IsIn(['Manha', 'Tarde', 'Noite', 'Integral'])
+  @IsIn(['Matutino', 'Vespertino', 'Noturno'])
   shift?: string;
 
   @IsOptional()

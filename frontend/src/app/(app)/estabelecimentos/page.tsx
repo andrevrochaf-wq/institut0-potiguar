@@ -208,7 +208,7 @@ export default function EstabelecimentosPage() {
       ...prev,
       [stageId]: {
         name: '',
-        shift: 'Manha',
+        shift: 'Matutino',
         students: '',
         active: true,
         ...prev[stageId],
@@ -220,7 +220,7 @@ export default function EstabelecimentosPage() {
   async function handleCreateClass(stageId: string) {
     if (!selectedId) return;
     setError('');
-    const form = classForms[stageId] ?? { name: '', shift: 'Manha', students: '', active: true };
+    const form = classForms[stageId] ?? { name: '', shift: 'Matutino', students: '', active: true };
     try {
       const res = await fetch(
         `${API_URL}/establishments/${selectedId}/stages/${stageId}/classes`,
@@ -458,10 +458,9 @@ export default function EstabelecimentosPage() {
                             updateClassForm(stage.id, { shift: event.target.value })
                           }
                         >
-                          <option value="Manha">Manha</option>
-                          <option value="Tarde">Tarde</option>
-                          <option value="Noite">Noite</option>
-                          <option value="Integral">Integral</option>
+                          <option value="Matutino">Matutino</option>
+                          <option value="Vespertino">Vespertino</option>
+                          <option value="Noturno">Noturno</option>
                         </select>
                         <input
                           className="input"
