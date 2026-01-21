@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
@@ -19,8 +19,8 @@ export class ServicesController {
 
   @Get()
   @Permissions('servicos.read')
-  async findAll() {
-    return this.servicesService.findAll();
+  async findAll(@Query('search') search?: string, @Query('status') status?: string) {
+    return this.servicesService.findAll({ search, status });
   }
 
   @Get(':id')

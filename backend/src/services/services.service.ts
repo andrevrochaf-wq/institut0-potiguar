@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { ServiceEntity } from './service.entity';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
@@ -16,12 +16,23 @@ export class ServicesService {
     const service = this.servicesRepo.create({
       name: dto.name,
       description: dto.description ?? null,
+      status: 'active',
     });
     return this.servicesRepo.save(service);
   }
 
-  async findAll() {
-    return this.servicesRepo.find({ order: { createdAt: 'DESC' } });
+  async findAll(query: { search?: string; status?: string }) {
+    const where: Record<string, unknown> = {};
+
+    if (query.search) {
+      where.name = ILike(`%${query.search}%`);
+    }
+
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    return this.servicesRepo.find({ where, order: { createdAt: 'DESC' } });
   }
 
   async findOne(id: string): Promise<ServiceEntity> {
