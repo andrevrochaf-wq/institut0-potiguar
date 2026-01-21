@@ -19,8 +19,26 @@ export class CollaboratorsController {
 
   @Get()
   @Permissions('colaboradores.read')
-  async findAll(@Query('search') search?: string, @Query('status') status?: string) {
-    return this.collaboratorsService.findAll({ search, status });
+  async findAll(
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+    @Query('cityId') cityId?: string,
+    @Query('projectId') projectId?: string,
+    @Query('establishmentId') establishmentId?: string,
+    @Query('serviceId') serviceId?: string,
+    @Query('contractType') contractType?: string,
+    @Query('bankName') bankName?: string,
+  ) {
+    return this.collaboratorsService.findAll({
+      search,
+      status,
+      cityId,
+      projectId,
+      establishmentId,
+      serviceId,
+      contractType,
+      bankName,
+    });
   }
 
   @Get(':id')

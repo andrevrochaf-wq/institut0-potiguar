@@ -1,0 +1,10 @@
+ALTER TABLE collaborators
+  ADD COLUMN IF NOT EXISTS email TEXT,
+  ADD COLUMN IF NOT EXISTS phone TEXT,
+  ADD COLUMN IF NOT EXISTS role_title TEXT,
+  ADD COLUMN IF NOT EXISTS contract_type TEXT,
+  ADD COLUMN IF NOT EXISTS bank_name TEXT,
+  ADD COLUMN IF NOT EXISTS project_id UUID REFERENCES projects(id),
+  ADD COLUMN IF NOT EXISTS establishment_id UUID REFERENCES establishments(id),
+  ADD COLUMN IF NOT EXISTS service_id UUID REFERENCES services(id),
+  ADD COLUMN IF NOT EXISTS admission_date DATE;

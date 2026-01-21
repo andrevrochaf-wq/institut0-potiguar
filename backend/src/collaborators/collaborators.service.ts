@@ -17,17 +17,35 @@ export class CollaboratorsService {
       fullName: dto.fullName,
       cpf: dto.cpf ?? null,
       rg: dto.rg ?? null,
+      email: dto.email ?? null,
+      phone: dto.phone ?? null,
+      roleTitle: dto.roleTitle ?? null,
+      contractType: dto.contractType ?? null,
       bankAgency: dto.bankAgency ?? null,
       bankAccount: dto.bankAccount ?? null,
+      bankName: dto.bankName ?? null,
       addressFull: dto.addressFull ?? null,
       cityId: dto.cityId ?? null,
+      projectId: dto.projectId ?? null,
+      establishmentId: dto.establishmentId ?? null,
+      serviceId: dto.serviceId ?? null,
+      admissionDate: dto.admissionDate ?? null,
       status: 'active',
     });
 
     return this.collaboratorsRepo.save(collaborator);
   }
 
-  async findAll(query: { search?: string; status?: string }) {
+  async findAll(query: {
+    search?: string;
+    status?: string;
+    cityId?: string;
+    projectId?: string;
+    establishmentId?: string;
+    serviceId?: string;
+    contractType?: string;
+    bankName?: string;
+  }) {
     const where: Record<string, unknown> = {};
 
     if (query.search) {
@@ -36,6 +54,30 @@ export class CollaboratorsService {
 
     if (query.status) {
       where.status = query.status;
+    }
+
+    if (query.cityId) {
+      where.cityId = query.cityId;
+    }
+
+    if (query.projectId) {
+      where.projectId = query.projectId;
+    }
+
+    if (query.establishmentId) {
+      where.establishmentId = query.establishmentId;
+    }
+
+    if (query.serviceId) {
+      where.serviceId = query.serviceId;
+    }
+
+    if (query.contractType) {
+      where.contractType = query.contractType;
+    }
+
+    if (query.bankName) {
+      where.bankName = ILike(`%${query.bankName}%`);
     }
 
     return this.collaboratorsRepo.find({
