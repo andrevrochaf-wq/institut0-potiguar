@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { Project } from './project.entity';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -16,12 +16,23 @@ export class ProjectsService {
     const project = this.projectsRepo.create({
       name: dto.name,
       description: dto.description ?? null,
+      status: 'active',
     });
     return this.projectsRepo.save(project);
   }
 
-  async findAll() {
-    return this.projectsRepo.find({ order: { createdAt: 'DESC' } });
+  async findAll(query: { search?: string; status?: string }) {
+    const where: Record<string, unknown> = {};
+
+    if (query.search) {
+      where.name = ILike(`%${query.search}%`);
+    }
+
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    return this.projectsRepo.find({ where, order: { createdAt: 'DESC' } });
   }
 
   async findOne(id: string): Promise<Project> {
