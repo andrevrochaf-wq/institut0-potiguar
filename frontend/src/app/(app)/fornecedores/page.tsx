@@ -10,6 +10,8 @@ type Provider = {
   document: string | null;
   phone: string | null;
   email: string | null;
+  address: string | null;
+  status: string;
   createdAt: string;
 };
 
@@ -17,11 +19,16 @@ export default function FornecedoresPage() {
   const [items, setItems] = useState<Provider[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [documentFilter, setDocumentFilter] = useState('');
 
   const [name, setName] = useState('');
   const [document, setDocument] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
   async function load() {
@@ -30,7 +37,11 @@ export default function FornecedoresPage() {
     try {
       const storedToken =
         token ?? (typeof window !== 'undefined' ? window.localStorage.getItem('ip_token') : null);
-      const res = await fetch(`${API_URL}/providers`, {
+      const params = new URLSearchParams();
+      if (search) params.set('search', search);
+      if (statusFilter !== 'all') params.set('status', statusFilter);
+      if (documentFilter) params.set('document', documentFilter);
+      const res = await fetch(`${API_URL}/providers?${params.toString()}`, {
         headers: storedToken ? { Authorization: `Bearer ${storedToken}` } : undefined,
       });
       if (!res.ok) throw new Error('Falha');
@@ -70,9 +81,61 @@ export default function FornecedoresPage() {
       setDocument('');
       setPhone('');
       setEmail('');
+      setAddress('');
+      setEditingId(null);
       await load();
     } catch (err) {
       setError('Nao foi possivel salvar fornecedor.');
+    }
+  }
+
+  async function handleUpdate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!editingId) return;
+    setError('');
+    try {
+      const res = await fetch(`${API_URL}/providers/${editingId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          name,
+          document: document || undefined,
+          phone: phone || undefined,
+          email: email || undefined,
+          address: address || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error('Falha');
+      setEditingId(null);
+      setName('');
+      setDocument('');
+      setPhone('');
+      setEmail('');
+      setAddress('');
+      await load();
+    } catch (err) {
+      setError('Nao foi possivel atualizar fornecedor.');
+    }
+  }
+
+  async function handleDeactivate(id: string) {
+    setError('');
+    try {
+      const res = await fetch(`${API_URL}/providers/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ status: 'inactive' }),
+      });
+      if (!res.ok) throw new Error('Falha');
+      await load();
+    } catch (err) {
+      setError('Nao foi possivel inativar fornecedor.');
     }
   }
 
@@ -82,7 +145,11 @@ export default function FornecedoresPage() {
         <strong>Fornecedores</strong>
       </div>
 
-      <form onSubmit={handleCreate} className="panel-body" style={{ display: 'grid', gap: 12 }}>
+      <form
+        onSubmit={editingId ? handleUpdate : handleCreate}
+        className="panel-body"
+        style={{ display: 'grid', gap: 12 }}
+      >
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
           <label style={{ display: 'grid', gap: 6 }}>
             Nome
@@ -100,11 +167,42 @@ export default function FornecedoresPage() {
             Email
             <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
           </label>
+          <label style={{ display: 'grid', gap: 6 }}>
+            Endereco
+            <input className="input" value={address} onChange={(e) => setAddress(e.target.value)} />
+          </label>
         </div>
         <button className="button" type="submit">
-          Salvar fornecedor
+          {editingId ? 'Atualizar fornecedor' : 'Salvar fornecedor'}
         </button>
       </form>
+
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <input
+          className="input"
+          placeholder="Buscar por nome"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <input
+          className="input"
+          placeholder="Documento"
+          value={documentFilter}
+          onChange={(e) => setDocumentFilter(e.target.value)}
+        />
+        <select
+          className="input"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="all">Todos</option>
+          <option value="active">Ativos</option>
+          <option value="inactive">Inativos</option>
+        </select>
+        <button className="button secondary" type="button" onClick={load}>
+          Buscar
+        </button>
+      </div>
 
       {error ? <p style={{ color: 'var(--danger)' }}>{error}</p> : null}
 
@@ -118,7 +216,9 @@ export default function FornecedoresPage() {
                 <th style={{ paddingBottom: 8 }}>Nome</th>
                 <th style={{ paddingBottom: 8 }}>Documento</th>
                 <th style={{ paddingBottom: 8 }}>Contato</th>
+                <th style={{ paddingBottom: 8 }}>Status</th>
                 <th style={{ paddingBottom: 8 }}>Criado</th>
+                <th style={{ paddingBottom: 8 }}>Acoes</th>
               </tr>
             </thead>
             <tbody>
@@ -127,8 +227,36 @@ export default function FornecedoresPage() {
                   <td style={{ padding: '10px 0' }}>{item.name}</td>
                   <td style={{ padding: '10px 0' }}>{item.document ?? '-'}</td>
                   <td style={{ padding: '10px 0' }}>{item.email ?? item.phone ?? '-'}</td>
+                  <td style={{ padding: '10px 0' }}>{item.status}</td>
                   <td style={{ padding: '10px 0' }}>
                     {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                  </td>
+                  <td style={{ padding: '10px 0' }}>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button
+                        className="button secondary"
+                        type="button"
+                        onClick={() => {
+                          setEditingId(item.id);
+                          setName(item.name);
+                          setDocument(item.document ?? '');
+                          setPhone(item.phone ?? '');
+                          setEmail(item.email ?? '');
+                          setAddress(item.address ?? '');
+                        }}
+                      >
+                        Editar
+                      </button>
+                      {item.status === 'active' ? (
+                        <button
+                          className="button danger"
+                          type="button"
+                          onClick={() => handleDeactivate(item.id)}
+                        >
+                          Inativar
+                        </button>
+                      ) : null}
+                    </div>
                   </td>
                 </tr>
               ))}

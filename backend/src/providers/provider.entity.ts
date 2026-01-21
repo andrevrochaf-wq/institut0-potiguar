@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('providers')
 export class Provider {
@@ -17,6 +17,15 @@ export class Provider {
   @Column({ type: 'text', nullable: true })
   email: string | null;
 
+  @Column({ type: 'text', nullable: true })
+  address: string | null;
+
+  @Column({ type: 'text', default: 'active' })
+  status: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  updatedAt: Date;
 }

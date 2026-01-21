@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ProvidersService } from './providers.service';
 import { CreateProviderDto } from './dto/create-provider.dto';
 import { UpdateProviderDto } from './dto/update-provider.dto';
@@ -19,8 +19,12 @@ export class ProvidersController {
 
   @Get()
   @Permissions('fornecedores.read')
-  async findAll() {
-    return this.providersService.findAll();
+  async findAll(
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+    @Query('document') document?: string,
+  ) {
+    return this.providersService.findAll({ search, status, document });
   }
 
   @Get(':id')

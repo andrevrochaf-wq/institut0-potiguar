@@ -4,7 +4,10 @@ CREATE TABLE IF NOT EXISTS providers (
   document TEXT,
   phone TEXT,
   email TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  address TEXT,
+  status TEXT NOT NULL DEFAULT 'active',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS agenda_entries (
