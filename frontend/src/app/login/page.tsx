@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import MockupArtboard from '../../components/auth/MockupArtboard';
+import AuthLayout from '../../components/auth/AuthLayout';
+import AuthCard from '../../components/auth/AuthCard';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
@@ -53,56 +54,73 @@ export default function LoginPage() {
   }
 
   return (
-    <MockupArtboard backgroundSrc="/auth/MOCKUP_LOGIN.png">
-      <form onSubmit={handleSubmit} className="ip-auth-hit ip-auth-hit--form">
-        <label className="ip-sr-only" htmlFor="login-email">
-          Email
-        </label>
-        <input
-          id="login-email"
-          className="ip-auth-hit ip-auth-hit--email"
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-          placeholder="E-mail"
-          required
-        />
-
-        <label className="ip-sr-only" htmlFor="login-password">
-          Senha
-        </label>
-        <input
-          id="login-password"
-          className="ip-auth-hit ip-auth-hit--password"
-          type="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          placeholder="Senha"
-          required
-        />
-
-        <Link className="ip-auth-hit ip-auth-hit--forgot" href="#" aria-label="Esqueci minha senha">
-          Esqueci minha senha
-        </Link>
-
-        {error ? (
-          <div className="ip-auth-hit ip-auth-hit--error" role="alert">
-            {error}
+    <AuthLayout>
+      <AuthCard
+        title="Bem-vindo(a) de volta"
+        subtitle="Acesse sua area do Instituto."
+        footer={
+          <div className="ip-card__footer-row">
+            <span>Nao tem uma conta?</span>
+            <Link className="ip-link" href="/register">
+              Criar conta
+            </Link>
           </div>
-        ) : null}
+        }
+      >
+        <form onSubmit={handleSubmit} className="ip-form">
+          <label className="ip-field">
+            <span>Email</span>
+            <div className="ip-input-wrap">
+              <span className="ip-input-icon" aria-hidden="true">
+                @
+              </span>
+              <input
+                className="ip-input"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="E-mail"
+                required
+              />
+              <span className="ip-input-trailing" aria-hidden="true">
+                ✉
+              </span>
+            </div>
+          </label>
 
-        <button
-          className="ip-auth-hit ip-auth-hit--submit"
-          type="submit"
-          disabled={loading}
-        >
-          {loading ? 'Entrando...' : 'Entrar'}
-        </button>
+          <label className="ip-field">
+            <span className="ip-field-row">
+              <span>Senha</span>
+              <Link className="ip-link ip-link--small" href="#">
+                Esqueci minha senha
+              </Link>
+            </span>
+            <div className="ip-input-wrap">
+              <span className="ip-input-icon" aria-hidden="true">
+                🔒
+              </span>
+              <input
+                className="ip-input"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                placeholder="Senha"
+                required
+              />
+            </div>
+          </label>
 
-        <Link className="ip-auth-hit ip-auth-hit--register" href="/register">
-          Criar conta
-        </Link>
-      </form>
-    </MockupArtboard>
+          {error ? (
+            <div className="ip-error" role="alert">
+              {error}
+            </div>
+          ) : null}
+
+          <button className="ip-btn" type="submit" disabled={loading}>
+            {loading ? 'Entrando...' : 'Entrar'}
+          </button>
+        </form>
+      </AuthCard>
+    </AuthLayout>
   );
 }
