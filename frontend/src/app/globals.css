@@ -480,6 +480,282 @@ textarea {
   pointer-events: none;
 }
 
+.ip-login {
+  min-height: 100vh;
+  background: #f6f2ea;
+  position: relative;
+  overflow: hidden;
+}
+
+.ip-login::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(30, 77, 183, 0.05), transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(31, 166, 106, 0.05), transparent 45%),
+    radial-gradient(circle at 12% 85%, rgba(216, 58, 58, 0.05), transparent 45%),
+    radial-gradient(circle at 70% 70%, rgba(11, 46, 95, 0.05), transparent 45%);
+  opacity: 0.9;
+}
+
+.ip-login__ribbon {
+  height: 10px;
+  background: linear-gradient(90deg, #1e4db7, #f28c28 45%, #1fa66a 70%, #d83a3a);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
+.ip-login__container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  position: relative;
+  z-index: 1;
+}
+
+.ip-login__grid {
+  width: min(1100px, 100%);
+  display: grid;
+  grid-template-columns: 1fr minmax(320px, 420px);
+  gap: 36px;
+  align-items: center;
+}
+
+.ip-login__brand {
+  color: #0b2e5f;
+  display: grid;
+  gap: 18px;
+}
+
+.ip-login__logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ip-login__mark {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid rgba(11, 46, 95, 0.15);
+  display: grid;
+  place-items: center;
+  box-shadow: 0 8px 18px rgba(11, 46, 95, 0.12);
+}
+
+.ip-login__mark svg {
+  width: 44px;
+  height: 44px;
+}
+
+.ip-login__logo strong {
+  font-size: 20px;
+  display: block;
+}
+
+.ip-login__logo span {
+  font-size: 14px;
+  color: rgba(11, 46, 95, 0.65);
+}
+
+.ip-login__illustration svg {
+  width: min(380px, 100%);
+  height: auto;
+}
+
+.ip-login__bullets {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  font-size: 14px;
+  color: rgba(11, 46, 95, 0.75);
+}
+
+.ip-login__bullets li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ip-login__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.ip-login__dot--blue {
+  background: #1e4db7;
+}
+
+.ip-login__dot--green {
+  background: #1fa66a;
+}
+
+.ip-login__dot--red {
+  background: #d83a3a;
+}
+
+.ip-login__footer {
+  font-size: 12px;
+  color: rgba(11, 46, 95, 0.6);
+}
+
+.ip-login__card {
+  display: flex;
+  justify-content: center;
+}
+
+.ip-login__card-inner {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  padding: 26px 28px 24px;
+  box-shadow: 0 18px 40px rgba(11, 46, 95, 0.18);
+  border: 1px solid rgba(11, 46, 95, 0.08);
+}
+
+.ip-login__card-header h1 {
+  font-size: 22px;
+  color: #0b2e5f;
+  margin-bottom: 6px;
+}
+
+.ip-login__card-header p {
+  color: rgba(11, 46, 95, 0.65);
+  font-size: 13px;
+}
+
+.ip-login__form {
+  display: grid;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.ip-login__field {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  color: rgba(11, 46, 95, 0.8);
+}
+
+.ip-login__field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ip-login__input-wrap {
+  position: relative;
+}
+
+.ip-login__input-wrap--left .ip-login__input {
+  padding-left: 40px;
+}
+
+.ip-login__input {
+  width: 100%;
+  height: 44px;
+  border-radius: 12px;
+  border: 1px solid #d7dde6;
+  background: #f7f9fc;
+  padding: 0 44px 0 14px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  color: #0b2e5f;
+}
+
+.ip-login__input:focus {
+  outline: none;
+  border-color: #1e4db7;
+  box-shadow: 0 0 0 4px rgba(30, 77, 183, 0.18);
+}
+
+.ip-login__icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  color: rgba(11, 46, 95, 0.6);
+}
+
+.ip-login__input-wrap--left .ip-login__icon {
+  left: 12px;
+  right: auto;
+}
+
+.ip-login__icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ip-login__link {
+  color: #1f5aa6;
+  font-size: 12px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.ip-login__error {
+  font-size: 12px;
+  color: #d83a3a;
+  margin-top: -4px;
+}
+
+.ip-login__error--ghost {
+  opacity: 0.4;
+}
+
+.ip-login__submit {
+  height: 46px;
+  border-radius: 12px;
+  border: none;
+  background: #0b2e5f;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(11, 46, 95, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ip-login__submit:hover {
+  transform: translateY(-1px);
+}
+
+.ip-login__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.ip-login__cta {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(11, 46, 95, 0.65);
+}
+
+@media (max-width: 900px) {
+  .ip-login__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ip-login__brand {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .ip-login__logo {
+    justify-content: center;
+  }
+}
+
 .ip-auth__top-ribbon {
   position: absolute;
   top: 12px;
