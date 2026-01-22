@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import AuthLayout from '../../components/auth/AuthLayout';
+import AuthCard from '../../components/auth/AuthCard';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
@@ -49,38 +52,43 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="page">
-      <div className="card" style={{ maxWidth: 420, width: '100%', padding: 28 }}>
-        <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
-          <span className="badge">Instituto Potiguar</span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28 }}>Criar conta</h1>
-          <p className="muted">Preencha os dados para solicitar acesso.</p>
-        </div>
-
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
-          <label style={{ display: 'grid', gap: 6 }}>
-            Nome completo
+    <AuthLayout>
+      <AuthCard
+        title="Vamos comecar!"
+        subtitle="Preencha os dados para solicitar acesso."
+        footer={
+          <div className="ip-card__footer-row">
+            <span>Ja tem uma conta?</span>
+            <Link className="ip-link" href="/login">
+              Entrar
+            </Link>
+          </div>
+        }
+      >
+        <form onSubmit={handleSubmit} className="ip-form">
+          <label className="ip-field">
+            <span>Nome completo</span>
             <input
-              className="input"
+              className="ip-input"
               value={fullName}
               onChange={(event) => setFullName(event.target.value)}
               required
             />
           </label>
-          <label style={{ display: 'grid', gap: 6 }}>
-            Email
+          <label className="ip-field">
+            <span>Email</span>
             <input
-              className="input"
+              className="ip-input"
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               required
             />
           </label>
-          <label style={{ display: 'grid', gap: 6 }}>
-            Senha
+          <label className="ip-field">
+            <span>Senha</span>
             <input
-              className="input"
+              className="ip-input"
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -89,23 +97,17 @@ export default function RegisterPage() {
             />
           </label>
 
-          {error ? <p style={{ color: 'var(--danger)' }}>{error}</p> : null}
+          {error ? (
+            <div className="ip-error" role="alert">
+              {error}
+            </div>
+          ) : null}
 
-          <button className="button" type="submit" disabled={loading}>
+          <button className="ip-btn" type="submit" disabled={loading}>
             {loading ? 'Criando...' : 'Criar conta'}
           </button>
         </form>
-
-        <div style={{ marginTop: 14 }}>
-          <button
-            className="button secondary"
-            type="button"
-            onClick={() => router.push('/login')}
-          >
-            Ja tenho conta
-          </button>
-        </div>
-      </div>
-    </div>
+      </AuthCard>
+    </AuthLayout>
   );
 }

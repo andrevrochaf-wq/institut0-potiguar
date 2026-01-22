@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import AuthLayout from '../../components/auth/AuthLayout';
+import AuthCard from '../../components/auth/AuthCard';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
@@ -51,23 +54,24 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="page">
-      <div className="card" style={{ maxWidth: 420, width: '100%', padding: 28 }}>
-        <div style={{ display: 'grid', gap: 12, marginBottom: 18 }}>
-          <span className="badge">Instituto Potiguar</span>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 28 }}>
-            Acesso ao Backoffice
-          </h1>
-          <p className="muted">
-            Entre com suas credenciais para acessar os modulos administrativos.
-          </p>
-        </div>
-
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: 12 }}>
-          <label style={{ display: 'grid', gap: 6 }}>
-            Email
+    <AuthLayout>
+      <AuthCard
+        title="Acesso ao Backoffice"
+        subtitle="Entre com suas credenciais para acessar os modulos administrativos."
+        footer={
+          <div className="ip-card__footer-row">
+            <span>Não tem uma conta?</span>
+            <Link className="ip-link" href="/register">
+              Criar conta
+            </Link>
+          </div>
+        }
+      >
+        <form onSubmit={handleSubmit} className="ip-form">
+          <label className="ip-field">
+            <span>Email</span>
             <input
-              className="input"
+              className="ip-input"
               type="email"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
@@ -75,10 +79,10 @@ export default function LoginPage() {
             />
           </label>
 
-          <label style={{ display: 'grid', gap: 6 }}>
-            Senha
+          <label className="ip-field">
+            <span>Senha</span>
             <input
-              className="input"
+              className="ip-input"
               type="password"
               value={password}
               onChange={(event) => setPassword(event.target.value)}
@@ -86,23 +90,23 @@ export default function LoginPage() {
             />
           </label>
 
-          {error ? <p style={{ color: 'var(--danger)' }}>{error}</p> : null}
+          {error ? (
+            <div className="ip-error" role="alert">
+              {error}
+            </div>
+          ) : null}
 
-          <button className="button" type="submit" disabled={loading}>
+          <div className="ip-form__row">
+            <Link className="ip-link" href="#" aria-label="Esqueci minha senha">
+              Esqueci minha senha
+            </Link>
+          </div>
+
+          <button className="ip-btn" type="submit" disabled={loading}>
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
-
-        <div style={{ marginTop: 14 }}>
-          <button
-            className="button secondary"
-            type="button"
-            onClick={() => router.push('/register')}
-          >
-            Criar conta
-          </button>
-        </div>
-      </div>
-    </div>
+      </AuthCard>
+    </AuthLayout>
   );
 }
