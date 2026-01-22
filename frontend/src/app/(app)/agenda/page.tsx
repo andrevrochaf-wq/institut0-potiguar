@@ -11,6 +11,8 @@ type Entry = {
   eventDate: string;
   startTime: string | null;
   endTime: string | null;
+  location: string | null;
+  status: string;
   createdAt: string;
 };
 
@@ -18,12 +20,18 @@ export default function AgendaPage() {
   const [items, setItems] = useState<Entry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [eventDate, setEventDate] = useState('');
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
+  const [location, setLocation] = useState('');
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
   async function load() {
@@ -32,7 +40,12 @@ export default function AgendaPage() {
     try {
       const storedToken =
         token ?? (typeof window !== 'undefined' ? window.localStorage.getItem('ip_token') : null);
-      const res = await fetch(`${API_URL}/agenda`, {
+      const params = new URLSearchParams();
+      if (search) params.set('search', search);
+      if (statusFilter !== 'all') params.set('status', statusFilter);
+      if (dateFrom) params.set('dateFrom', dateFrom);
+      if (dateTo) params.set('dateTo', dateTo);
+      const res = await fetch(`${API_URL}/agenda?${params.toString()}`, {
         headers: storedToken ? { Authorization: `Bearer ${storedToken}` } : undefined,
       });
       if (!res.ok) throw new Error('Falha');
@@ -66,6 +79,7 @@ export default function AgendaPage() {
           eventDate,
           startTime: startTime || undefined,
           endTime: endTime || undefined,
+          location: location || undefined,
         }),
       });
       if (!res.ok) throw new Error('Falha');
@@ -74,9 +88,63 @@ export default function AgendaPage() {
       setEventDate('');
       setStartTime('');
       setEndTime('');
+      setLocation('');
+      setEditingId(null);
       await load();
     } catch (err) {
       setError('Nao foi possivel salvar agenda.');
+    }
+  }
+
+  async function handleUpdate(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!editingId) return;
+    setError('');
+    try {
+      const res = await fetch(`${API_URL}/agenda/${editingId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          title,
+          description: description || undefined,
+          eventDate,
+          startTime: startTime || undefined,
+          endTime: endTime || undefined,
+          location: location || undefined,
+        }),
+      });
+      if (!res.ok) throw new Error('Falha');
+      setEditingId(null);
+      setTitle('');
+      setDescription('');
+      setEventDate('');
+      setStartTime('');
+      setEndTime('');
+      setLocation('');
+      await load();
+    } catch (err) {
+      setError('Nao foi possivel atualizar agenda.');
+    }
+  }
+
+  async function handleDeactivate(id: string) {
+    setError('');
+    try {
+      const res = await fetch(`${API_URL}/agenda/${id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ status: 'inactive' }),
+      });
+      if (!res.ok) throw new Error('Falha');
+      await load();
+    } catch (err) {
+      setError('Nao foi possivel inativar agenda.');
     }
   }
 
@@ -86,7 +154,11 @@ export default function AgendaPage() {
         <strong>Agenda</strong>
       </div>
 
-      <form onSubmit={handleCreate} className="panel-body" style={{ display: 'grid', gap: 12 }}>
+      <form
+        onSubmit={editingId ? handleUpdate : handleCreate}
+        className="panel-body"
+        style={{ display: 'grid', gap: 12 }}
+      >
         <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
           <label style={{ display: 'grid', gap: 6 }}>
             Titulo
@@ -104,15 +176,52 @@ export default function AgendaPage() {
             Fim
             <input className="input" type="time" value={endTime} onChange={(e) => setEndTime(e.target.value)} />
           </label>
+          <label style={{ display: 'grid', gap: 6 }}>
+            Local
+            <input className="input" value={location} onChange={(e) => setLocation(e.target.value)} />
+          </label>
         </div>
         <label style={{ display: 'grid', gap: 6 }}>
           Descricao
           <input className="input" value={description} onChange={(e) => setDescription(e.target.value)} />
         </label>
         <button className="button" type="submit">
-          Salvar evento
+          {editingId ? 'Atualizar evento' : 'Salvar evento'}
         </button>
       </form>
+
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <input
+          className="input"
+          placeholder="Buscar por titulo"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <input
+          className="input"
+          type="date"
+          value={dateFrom}
+          onChange={(e) => setDateFrom(e.target.value)}
+        />
+        <input
+          className="input"
+          type="date"
+          value={dateTo}
+          onChange={(e) => setDateTo(e.target.value)}
+        />
+        <select
+          className="input"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+        >
+          <option value="all">Todos</option>
+          <option value="active">Ativos</option>
+          <option value="inactive">Inativos</option>
+        </select>
+        <button className="button secondary" type="button" onClick={load}>
+          Buscar
+        </button>
+      </div>
 
       {error ? <p style={{ color: 'var(--danger)' }}>{error}</p> : null}
 
@@ -126,6 +235,9 @@ export default function AgendaPage() {
                 <th style={{ paddingBottom: 8 }}>Titulo</th>
                 <th style={{ paddingBottom: 8 }}>Data</th>
                 <th style={{ paddingBottom: 8 }}>Horario</th>
+                <th style={{ paddingBottom: 8 }}>Local</th>
+                <th style={{ paddingBottom: 8 }}>Status</th>
+                <th style={{ paddingBottom: 8 }}>Acoes</th>
               </tr>
             </thead>
             <tbody>
@@ -134,6 +246,36 @@ export default function AgendaPage() {
                   <td style={{ padding: '10px 0' }}>{item.title}</td>
                   <td style={{ padding: '10px 0' }}>{item.eventDate}</td>
                   <td style={{ padding: '10px 0' }}>{item.startTime ?? '-'} - {item.endTime ?? '-'}</td>
+                  <td style={{ padding: '10px 0' }}>{item.location ?? '-'}</td>
+                  <td style={{ padding: '10px 0' }}>{item.status}</td>
+                  <td style={{ padding: '10px 0' }}>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <button
+                        className="button secondary"
+                        type="button"
+                        onClick={() => {
+                          setEditingId(item.id);
+                          setTitle(item.title);
+                          setDescription(item.description ?? '');
+                          setEventDate(item.eventDate);
+                          setStartTime(item.startTime ?? '');
+                          setEndTime(item.endTime ?? '');
+                          setLocation(item.location ?? '');
+                        }}
+                      >
+                        Editar
+                      </button>
+                      {item.status === 'active' ? (
+                        <button
+                          className="button danger"
+                          type="button"
+                          onClick={() => handleDeactivate(item.id)}
+                        >
+                          Inativar
+                        </button>
+                      ) : null}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>

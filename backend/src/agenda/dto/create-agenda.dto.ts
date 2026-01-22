@@ -19,4 +19,8 @@ export class CreateAgendaDto {
   @IsOptional()
   @IsString()
   endTime?: string;
+
+  @IsOptional()
+  @IsString()
+  location?: string;
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { AgendaService } from './agenda.service';
 import { CreateAgendaDto } from './dto/create-agenda.dto';
 import { UpdateAgendaDto } from './dto/update-agenda.dto';
@@ -19,8 +19,13 @@ export class AgendaController {
 
   @Get()
   @Permissions('agenda.read')
-  async findAll() {
-    return this.agendaService.findAll();
+  async findAll(
+    @Query('search') search?: string,
+    @Query('status') status?: string,
+    @Query('dateFrom') dateFrom?: string,
+    @Query('dateTo') dateTo?: string,
+  ) {
+    return this.agendaService.findAll({ search, status, dateFrom, dateTo });
   }
 
   @Get(':id')

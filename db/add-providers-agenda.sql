@@ -17,5 +17,8 @@ CREATE TABLE IF NOT EXISTS agenda_entries (
   event_date DATE NOT NULL,
   start_time TEXT,
   end_time TEXT,
-  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  location TEXT,
+  status TEXT NOT NULL DEFAULT 'active',
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

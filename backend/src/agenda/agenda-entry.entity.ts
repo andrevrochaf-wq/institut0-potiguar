@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('agenda_entries')
 export class AgendaEntry {
@@ -20,6 +20,15 @@ export class AgendaEntry {
   @Column({ name: 'end_time', type: 'text', nullable: true })
   endTime: string | null;
 
+  @Column({ type: 'text', nullable: true })
+  location: string | null;
+
+  @Column({ type: 'text', default: 'active' })
+  status: string;
+
   @CreateDateColumn({ name: 'created_at', type: 'timestamptz' })
   createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
+  updatedAt: Date;
 }
