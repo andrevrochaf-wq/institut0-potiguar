@@ -32,6 +32,7 @@ jobs:
         working-directory: frontend
         env:
           NEXT_PUBLIC_API_URL: https://institut0-potiguar-1.onrender.com
+          NEXT_PUBLIC_BASE_PATH: /institut0-potiguar
         run: npm run build
 
       - name: List build output
