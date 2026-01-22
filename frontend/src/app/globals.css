@@ -470,16 +470,18 @@ textarea {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: -120px;
-  height: 260px;
-  background: radial-gradient(circle at 50% 0%, rgba(11, 31, 59, 0.08), transparent 70%);
-  opacity: 0.6;
+  bottom: -140px;
+  height: 280px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(11, 31, 59, 0.07), transparent 70%),
+    radial-gradient(circle at 80% 0%, rgba(11, 31, 59, 0.05), transparent 70%);
+  opacity: 0.55;
   pointer-events: none;
 }
 
 .ip-auth__top-ribbon {
   position: absolute;
-  top: 18px;
+  top: 12px;
   left: 50%;
   transform: translateX(-50%);
   width: min(1080px, 92%);
@@ -517,15 +519,19 @@ textarea {
 }
 
 .ip-brand__mark {
-  width: 46px;
-  height: 46px;
+  width: 56px;
+  height: 56px;
   border-radius: 14px;
-  background: #0b1f3b;
-  color: #fff;
+  background: #fff;
+  border: 1px solid rgba(11, 31, 59, 0.12);
   display: grid;
   place-items: center;
-  font-weight: 700;
-  letter-spacing: 0.04em;
+  box-shadow: 0 10px 20px rgba(11, 31, 59, 0.08);
+}
+
+.ip-brand__mark svg {
+  width: 44px;
+  height: 44px;
 }
 
 .ip-brand__logo strong {
@@ -591,17 +597,17 @@ textarea {
   background: rgba(255, 255, 255, 0.92);
   border-radius: 18px;
   border: 1px solid rgba(230, 224, 216, 0.9);
-  box-shadow: 0 28px 70px rgba(11, 31, 59, 0.12);
+  box-shadow: 0 28px 70px rgba(11, 31, 59, 0.18);
   backdrop-filter: blur(10px);
   overflow: hidden;
 }
 
 .ip-card__ribbon {
-  height: 10px;
+  height: 12px;
 }
 
 .ip-ribbon {
-  height: 10px;
+  height: 12px;
   width: 100%;
   background: linear-gradient(90deg, #1e4db7, #1fa66a 60%, #d83a3a);
 }
@@ -613,7 +619,7 @@ textarea {
 }
 
 .ip-card__heading h1 {
-  font-size: 28px;
+  font-size: 26px;
   color: #0b1f3b;
   margin-bottom: 6px;
 }
@@ -651,9 +657,40 @@ textarea {
   height: 44px;
   border-radius: 12px;
   border: 1px solid rgba(11, 31, 59, 0.15);
-  padding: 0 14px;
+  padding: 0 44px;
   background: #fff;
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ip-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.ip-input-icon {
+  position: absolute;
+  left: 14px;
+  font-size: 14px;
+  color: rgba(11, 31, 59, 0.6);
+}
+
+.ip-input-trailing {
+  position: absolute;
+  right: 14px;
+  font-size: 14px;
+  color: rgba(11, 31, 59, 0.5);
+}
+
+.ip-field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.ip-link--small {
+  font-size: 12px;
 }
 
 .ip-input:focus {

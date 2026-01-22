@@ -15,7 +15,22 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
         <div className="ip-auth__grid">
           <aside className="ip-brand">
             <div className="ip-brand__logo">
-              <div className="ip-brand__mark">IP</div>
+              <div className="ip-brand__mark" aria-hidden="true">
+                <svg viewBox="0 0 64 64">
+                  <path
+                    d="M8 38c10-12 26-18 48-18v12c-16 0-28 4-36 12z"
+                    fill="#1E4DB7"
+                  />
+                  <path
+                    d="M8 44c10-8 26-12 48-12v10c-16 0-28 2-36 8z"
+                    fill="#1FA66A"
+                  />
+                  <path
+                    d="M8 48c10-5 26-7 48-7v9c-16 0-28 1-36 5z"
+                    fill="#D83A3A"
+                  />
+                </svg>
+              </div>
               <div>
                 <strong>Instituto Potiguar</strong>
                 <span>Juntos pela Educacao.</span>
@@ -31,7 +46,7 @@ export default function AuthLayout({ children }: AuthLayoutProps) {
               </li>
               <li>
                 <span className="ip-dot ip-dot--green" />
-                Acesso aos modulos por setor e permissoes.
+                Acesse seus cursos e conteudos.
               </li>
               <li>
                 <span className="ip-dot ip-dot--red" />

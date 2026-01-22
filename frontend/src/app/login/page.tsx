@@ -56,11 +56,11 @@ export default function LoginPage() {
   return (
     <AuthLayout>
       <AuthCard
-        title="Acesso ao Backoffice"
-        subtitle="Entre com suas credenciais para acessar os modulos administrativos."
+        title="Bem-vindo(a) de volta"
+        subtitle="Acesse sua area do Instituto."
         footer={
           <div className="ip-card__footer-row">
-            <span>Não tem uma conta?</span>
+            <span>Nao tem uma conta?</span>
             <Link className="ip-link" href="/register">
               Criar conta
             </Link>
@@ -70,24 +70,42 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="ip-form">
           <label className="ip-field">
             <span>Email</span>
-            <input
-              className="ip-input"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
+            <div className="ip-input-wrap">
+              <span className="ip-input-icon" aria-hidden="true">
+                @
+              </span>
+              <input
+                className="ip-input"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+              />
+              <span className="ip-input-trailing" aria-hidden="true">
+                ✉
+              </span>
+            </div>
           </label>
 
           <label className="ip-field">
-            <span>Senha</span>
-            <input
-              className="ip-input"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-            />
+            <span className="ip-field-row">
+              <span>Senha</span>
+              <Link className="ip-link ip-link--small" href="#">
+                Esqueci minha senha
+              </Link>
+            </span>
+            <div className="ip-input-wrap">
+              <span className="ip-input-icon" aria-hidden="true">
+                🔒
+              </span>
+              <input
+                className="ip-input"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+            </div>
           </label>
 
           {error ? (
@@ -95,12 +113,6 @@ export default function LoginPage() {
               {error}
             </div>
           ) : null}
-
-          <div className="ip-form__row">
-            <Link className="ip-link" href="#" aria-label="Esqueci minha senha">
-              Esqueci minha senha
-            </Link>
-          </div>
 
           <button className="ip-btn" type="submit" disabled={loading}>
             {loading ? 'Entrando...' : 'Entrar'}

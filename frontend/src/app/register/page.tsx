@@ -68,33 +68,51 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} className="ip-form">
           <label className="ip-field">
             <span>Nome completo</span>
-            <input
-              className="ip-input"
-              value={fullName}
-              onChange={(event) => setFullName(event.target.value)}
-              required
-            />
+            <div className="ip-input-wrap">
+              <span className="ip-input-icon" aria-hidden="true">
+                👤
+              </span>
+              <input
+                className="ip-input"
+                value={fullName}
+                onChange={(event) => setFullName(event.target.value)}
+                required
+              />
+            </div>
           </label>
           <label className="ip-field">
             <span>Email</span>
-            <input
-              className="ip-input"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-            />
+            <div className="ip-input-wrap">
+              <span className="ip-input-icon" aria-hidden="true">
+                @
+              </span>
+              <input
+                className="ip-input"
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+              />
+              <span className="ip-input-trailing" aria-hidden="true">
+                ✉
+              </span>
+            </div>
           </label>
           <label className="ip-field">
             <span>Senha</span>
-            <input
-              className="ip-input"
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              minLength={8}
-            />
+            <div className="ip-input-wrap">
+              <span className="ip-input-icon" aria-hidden="true">
+                🔒
+              </span>
+              <input
+                className="ip-input"
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+                minLength={8}
+              />
+            </div>
           </label>
 
           {error ? (
