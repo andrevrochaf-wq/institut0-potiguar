@@ -1,32 +1,48 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
-export default function LoginPage() {
+export default function ResetPasswordPage() {
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [token, setToken] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const queryToken = searchParams.get('token');
+    if (queryToken) {
+      setToken(queryToken);
+    }
+  }, [searchParams]);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
-    setLoading(true);
+    setSuccess(false);
 
+    if (password !== confirmPassword) {
+      setError('As senhas nao coincidem.');
+      return;
+    }
+
+    setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/auth/login`, {
+      const res = await fetch(`${API_URL}/auth/reset-password`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ token, password }),
       });
 
       if (!res.ok) {
-        let message = 'Nao foi possivel autenticar. Verifique os dados.';
+        let message = 'Nao foi possivel redefinir a senha.';
         try {
           const data = await res.json();
           if (Array.isArray(data?.message)) {
@@ -40,12 +56,10 @@ export default function LoginPage() {
         throw new Error(message);
       }
 
-      const data = await res.json();
-      window.localStorage.setItem('ip_token', data.access_token);
-      window.localStorage.setItem('ip_user', JSON.stringify(data.user));
-      router.replace('/dashboard');
+      setSuccess(true);
+      setTimeout(() => router.replace('/login'), 1200);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Nao foi possivel autenticar. Verifique os dados.');
+      setError(err instanceof Error ? err.message : 'Nao foi possivel redefinir a senha.');
     } finally {
       setLoading(false);
     }
@@ -96,50 +110,26 @@ export default function LoginPage() {
           <section className="ip-login__card">
             <div className="ip-login__card-inner">
               <div className="ip-login__card-header">
-                <h1>Bem-vindo(a) de volta</h1>
-                <p>Acesse sua área do Instituto.</p>
+                <h1>Redefinir senha</h1>
+                <p>Crie uma nova senha segura para sua conta.</p>
               </div>
 
               <form onSubmit={handleSubmit} className="ip-login__form">
                 <label className="ip-login__field">
-                  <span className="ip-sr-only">E-mail</span>
+                  <span>Token de recuperacao</span>
                   <div className="ip-login__input-wrap">
                     <input
                       className="ip-login__input"
-                      type="email"
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                      placeholder="E-mail"
+                      value={token}
+                      onChange={(event) => setToken(event.target.value)}
+                      placeholder="Cole o token recebido"
                       required
                     />
-                    <span className="ip-login__icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24">
-                        <path
-                          d="M4 6h16v12H4z"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.6"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d="M4 7.5l8 5 8-5"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="1.6"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
-                    </span>
                   </div>
                 </label>
 
                 <label className="ip-login__field">
-                  <span className="ip-login__field-row">
-                    <span>Senha</span>
-                    <Link className="ip-login__link" href="/recuperar-senha">
-                      Esqueci minha senha
-                    </Link>
-                  </span>
+                  <span>Nova senha</span>
                   <div className="ip-login__input-wrap ip-login__input-wrap--left">
                     <span className="ip-login__icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24">
@@ -164,8 +154,42 @@ export default function LoginPage() {
                       type="password"
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
-                      placeholder="Senha"
+                      placeholder="Nova senha"
                       required
+                      minLength={8}
+                    />
+                  </div>
+                </label>
+
+                <label className="ip-login__field">
+                  <span>Confirmar senha</span>
+                  <div className="ip-login__input-wrap ip-login__input-wrap--left">
+                    <span className="ip-login__icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24">
+                        <path
+                          d="M6 11h12v9H6z"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d="M9 11V8a3 3 0 1 1 6 0v3"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.6"
+                          strokeLinecap="round"
+                        />
+                      </svg>
+                    </span>
+                    <input
+                      className="ip-login__input"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={(event) => setConfirmPassword(event.target.value)}
+                      placeholder="Repita a senha"
+                      required
+                      minLength={8}
                     />
                   </div>
                 </label>
@@ -174,21 +198,23 @@ export default function LoginPage() {
                   <p className="ip-login__error" role="alert">
                     {error}
                   </p>
-                ) : (
-                  <p className="ip-login__error ip-login__error--ghost">
-                    Confira sua senha. Ela parece incorreta.
-                  </p>
-                )}
+                ) : null}
+
+                {success ? (
+                  <div className="ip-login__success" role="status">
+                    <p>Senha redefinida! Redirecionando para o login.</p>
+                  </div>
+                ) : null}
 
                 <button className="ip-login__submit" type="submit" disabled={loading}>
-                  {loading ? 'Entrando...' : 'Entrar'}
+                  {loading ? 'Salvando...' : 'Redefinir senha'}
                 </button>
               </form>
 
               <div className="ip-login__cta">
-                <span>Não tem uma conta?</span>
-                <Link className="ip-login__link" href="/register">
-                  Criar conta
+                <span>Ja tem acesso?</span>
+                <Link className="ip-login__link" href="/login">
+                  Voltar ao login
                 </Link>
               </div>
             </div>
@@ -203,7 +229,7 @@ function StudentsIllustration() {
   return (
     <svg viewBox="0 0 420 250" role="img" aria-label="Ilustração de estudantes">
       <defs>
-        <linearGradient id="skin" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id="skin-reset" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor="#f2c7a6" />
           <stop offset="100%" stopColor="#e9b089" />
         </linearGradient>
@@ -213,18 +239,18 @@ function StudentsIllustration() {
       <path d="M140 190c20-40 70-40 90 0" fill="#1e4db7" opacity="0.3" />
       <path d="M230 190c20-40 70-40 90 0" fill="#d83a3a" opacity="0.25" />
 
-      <circle cx="110" cy="105" r="26" fill="url(#skin)" />
+      <circle cx="110" cy="105" r="26" fill="url(#skin-reset)" />
       <path d="M86 150c8-20 48-20 56 0v24H86z" fill="#1e4db7" />
       <rect x="74" y="138" width="20" height="56" rx="10" fill="#1e4db7" />
       <rect x="128" y="138" width="20" height="56" rx="10" fill="#1e4db7" />
       <rect x="90" y="160" width="52" height="30" rx="6" fill="#f2c97d" />
 
-      <circle cx="200" cy="95" r="24" fill="url(#skin)" />
+      <circle cx="200" cy="95" r="24" fill="url(#skin-reset)" />
       <path d="M176 140c10-18 48-18 56 0v30h-56z" fill="#1fa66a" />
       <path d="M220 90l24 8-8 18" fill="#1fa66a" />
       <path d="M220 78l24 12" stroke="#1fa66a" strokeWidth="6" strokeLinecap="round" />
 
-      <circle cx="282" cy="108" r="22" fill="url(#skin)" />
+      <circle cx="282" cy="108" r="22" fill="url(#skin-reset)" />
       <path d="M260 148c8-16 42-16 50 0v26h-50z" fill="#d83a3a" />
       <rect x="270" y="132" width="40" height="24" rx="8" fill="#0b2e5f" opacity="0.2" />
       <path d="M298 150l22 22" stroke="#0b2e5f" strokeWidth="6" strokeLinecap="round" />

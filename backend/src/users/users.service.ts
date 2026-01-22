@@ -67,4 +67,9 @@ export class UsersService {
   async deactivate(userId: string): Promise<void> {
     await this.usersRepo.update(userId, { active: false });
   }
+
+  async updatePassword(userId: string, password: string): Promise<void> {
+    const passwordHash = await bcrypt.hash(password, 10);
+    await this.usersRepo.update(userId, { passwordHash });
+  }
 }
