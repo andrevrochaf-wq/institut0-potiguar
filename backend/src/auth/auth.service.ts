@@ -22,7 +22,7 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<User> {
     const user = await this.usersService.findByEmailWithRoles(email);
     if (!user || !user.active) {
-      throw new UnauthorizedException('Credenciais invalidas');
+      throw new UnauthorizedException(user && !user.active ? 'Conta aguardando aprovacao.' : 'Credenciais invalidas');
     }
 
     const isValid = await bcrypt.compare(password, user.passwordHash);
@@ -62,9 +62,9 @@ export class AuthService {
       email: data.email,
       fullName: data.fullName,
       password: data.password,
-      primaryRole: 'ADMIN',
+      active: false,
     });
-    return { id: user.id };
+    return { id: user.id, status: 'pending' };
   }
 
   async requestPasswordReset(email: string) {

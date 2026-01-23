@@ -1,22 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
 export default function RegisterPage() {
-  const router = useRouter();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError('');
+    setSuccess(false);
     setLoading(true);
 
     try {
@@ -41,7 +41,7 @@ export default function RegisterPage() {
         throw new Error(message);
       }
 
-      router.replace('/login');
+      setSuccess(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Nao foi possivel criar o cadastro.');
     } finally {
@@ -196,6 +196,12 @@ export default function RegisterPage() {
                   <p className="ip-login__error" role="alert">
                     {error}
                   </p>
+                ) : null}
+
+                {success ? (
+                  <div className="ip-login__success" role="status">
+                    <p>Cadastro enviado. Aguarde a aprovacao do administrador.</p>
+                  </div>
                 ) : (
                   <p className="ip-login__error ip-login__error--ghost">
                     Suas credenciais ficam protegidas.

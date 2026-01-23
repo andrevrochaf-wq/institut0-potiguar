@@ -36,7 +36,7 @@ export class UsersService {
       fullName: dto.fullName,
       passwordHash,
       primaryRole: dto.primaryRole ?? null,
-      active: true,
+      active: dto.active ?? true,
     });
 
     const saved = await this.usersRepo.save(user);
@@ -66,6 +66,10 @@ export class UsersService {
 
   async deactivate(userId: string): Promise<void> {
     await this.usersRepo.update(userId, { active: false });
+  }
+
+  async activate(userId: string): Promise<void> {
+    await this.usersRepo.update(userId, { active: true });
   }
 
   async updatePassword(userId: string, password: string): Promise<void> {

@@ -29,6 +29,13 @@ export class UsersController {
     return { status: 'ok' };
   }
 
+  @Post(':id/activate')
+  @Permissions('usuarios.update')
+  async activate(@Param('id') id: string) {
+    await this.usersService.activate(id);
+    return { status: 'ok' };
+  }
+
   @Post(':id/roles')
   @Permissions('usuarios.update')
   async assignRole(@Param('id') id: string, @Body('roleName') roleName: string) {
