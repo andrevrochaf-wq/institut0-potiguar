@@ -129,17 +129,8 @@ export default function RegisterPage() {
                   </div>
                 </label>
                 <label className="ip-login__field">
-                  <span>E-mail</span>
-                  <div className="ip-login__input-wrap">
-                    <input
-                      className="ip-login__input"
-                      type="email"
-                      value={email}
-                      onChange={(event) => setEmail(event.target.value)}
-                      placeholder="E-mail"
-                      required
-                    />
-                    <span className="ip-login__icon" aria-hidden="true">
+                  <span className="ip-login__label">
+                    <span className="ip-login__label-icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24">
                         <path
                           d="M4 6h16v12H4z"
@@ -157,6 +148,17 @@ export default function RegisterPage() {
                         />
                       </svg>
                     </span>
+                    E-mail
+                  </span>
+                  <div className="ip-login__input-wrap">
+                    <input
+                      className="ip-login__input"
+                      type="email"
+                      value={email}
+                      onChange={(event) => setEmail(event.target.value)}
+                      placeholder="E-mail"
+                      required
+                    />
                   </div>
                 </label>
                 <label className="ip-login__field">
