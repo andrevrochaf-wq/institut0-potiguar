@@ -26,7 +26,19 @@ export class UsersService {
   }
 
   async listUsers(): Promise<User[]> {
-    return this.usersRepo.find({ order: { createdAt: 'DESC' } });
+    return this.usersRepo.find({
+      select: {
+        id: true,
+        fullName: true,
+        email: true,
+        active: true,
+        primaryRole: true,
+        createdAt: true,
+        updatedAt: true,
+        lastLoginAt: true,
+      },
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async createUser(dto: CreateUserDto): Promise<User> {
