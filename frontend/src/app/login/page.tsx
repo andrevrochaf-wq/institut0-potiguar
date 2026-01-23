@@ -134,12 +134,7 @@ export default function LoginPage() {
                 </label>
 
                 <label className="ip-login__field">
-                  <span className="ip-login__field-row">
-                    <span>Senha</span>
-                    <Link className="ip-login__link" href="/recuperar-senha">
-                      Esqueci minha senha
-                    </Link>
-                  </span>
+                  <span>Senha</span>
                   <div className="ip-login__input-wrap ip-login__input-wrap--left">
                     <span className="ip-login__icon" aria-hidden="true">
                       <svg viewBox="0 0 24 24">
@@ -183,6 +178,12 @@ export default function LoginPage() {
                 <button className="ip-login__submit" type="submit" disabled={loading}>
                   {loading ? 'Entrando...' : 'Entrar'}
                 </button>
+
+                <div className="ip-login__forgot">
+                  <Link className="ip-login__link" href="/recuperar-senha">
+                    Esqueci minha senha
+                  </Link>
+                </div>
               </form>
 
               <div className="ip-login__cta">

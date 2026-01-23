@@ -743,6 +743,11 @@ textarea {
   cursor: not-allowed;
 }
 
+.ip-login__forgot {
+  text-align: center;
+  margin-top: 8px;
+}
+
 .ip-login__cta {
   margin-top: 18px;
   text-align: center;
