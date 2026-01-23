@@ -20,6 +20,7 @@ export default function UsuariosPage() {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [active, setActive] = useState(true);
   const [token, setToken] = useState<string | null>(null);
 
   async function load() {
@@ -56,17 +57,35 @@ export default function UsuariosPage() {
           'Content-Type': 'application/json',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ fullName, email, password, primaryRole: 'ADMIN' }),
+        body: JSON.stringify({ fullName, email, password, primaryRole: 'ADMIN', active }),
       });
       if (!res.ok) throw new Error('Falha');
       setFullName('');
       setEmail('');
       setPassword('');
+      setActive(true);
       await load();
     } catch (err) {
       setError('Nao foi possivel salvar usuario.');
     }
   }
+
+  async function handleApprove(userId: string) {
+    setError('');
+    try {
+      const res = await fetch(`${API_URL}/users/${userId}/activate`, {
+        method: 'POST',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+      if (!res.ok) throw new Error('Falha');
+      await load();
+    } catch (err) {
+      setError('Nao foi possivel aprovar usuario.');
+    }
+  }
+
+  const pendingUsers = items.filter((item) => !item.active);
+  const activeUsers = items.filter((item) => item.active);
 
   return (
     <section className="panel" style={{ padding: 20, display: 'grid', gap: 16 }}>
@@ -88,6 +107,13 @@ export default function UsuariosPage() {
             Senha
             <input className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </label>
+          <label style={{ display: 'grid', gap: 6 }}>
+            Status
+            <select className="input" value={active ? 'active' : 'pending'} onChange={(e) => setActive(e.target.value === 'active')}>
+              <option value="active">Ativo</option>
+              <option value="pending">Pendente</option>
+            </select>
+          </label>
         </div>
         <button className="button" type="submit">
           Salvar usuario
@@ -95,6 +121,36 @@ export default function UsuariosPage() {
       </form>
 
       {error ? <p style={{ color: 'var(--danger)' }}>{error}</p> : null}
+
+      {pendingUsers.length ? (
+        <div className="panel-body" style={{ display: 'grid', gap: 12 }}>
+          <strong>Usuarios pendentes</strong>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ textAlign: 'left' }}>
+                  <th style={{ paddingBottom: 8 }}>Nome</th>
+                  <th style={{ paddingBottom: 8 }}>Email</th>
+                  <th style={{ paddingBottom: 8 }}>Acao</th>
+                </tr>
+              </thead>
+              <tbody>
+                {pendingUsers.map((item) => (
+                  <tr key={item.id} style={{ borderTop: '1px solid var(--border)' }}>
+                    <td style={{ padding: '10px 0' }}>{item.fullName}</td>
+                    <td style={{ padding: '10px 0' }}>{item.email}</td>
+                    <td style={{ padding: '10px 0' }}>
+                      <button className="button" type="button" onClick={() => handleApprove(item.id)}>
+                        Aprovar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ) : null}
 
       {loading ? (
         <p className="pill">Carregando...</p>
@@ -109,7 +165,7 @@ export default function UsuariosPage() {
               </tr>
             </thead>
             <tbody>
-              {items.map((item) => (
+              {activeUsers.map((item) => (
                 <tr key={item.id} style={{ borderTop: '1px solid var(--border)' }}>
                   <td style={{ padding: '10px 0' }}>{item.fullName}</td>
                   <td style={{ padding: '10px 0' }}>{item.email}</td>
