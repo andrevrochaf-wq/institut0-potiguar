@@ -10,6 +10,7 @@ type User = {
   email: string;
   active: boolean;
   createdAt: string;
+  primaryRole?: string | null;
 };
 
 export default function UsuariosPage() {
@@ -22,6 +23,7 @@ export default function UsuariosPage() {
   const [password, setPassword] = useState('');
   const [active, setActive] = useState(true);
   const [token, setToken] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   async function load() {
     setLoading(true);
@@ -44,6 +46,15 @@ export default function UsuariosPage() {
 
   useEffect(() => {
     setToken(window.localStorage.getItem('ip_token'));
+    const storedUser = window.localStorage.getItem('ip_user');
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser) as { id?: string };
+        if (parsed?.id) setCurrentUserId(parsed.id);
+      } catch {
+        // ignore parse error
+      }
+    }
     load();
   }, []);
 
@@ -81,6 +92,23 @@ export default function UsuariosPage() {
       await load();
     } catch (err) {
       setError('Nao foi possivel aprovar usuario.');
+    }
+  }
+
+  async function handleDelete(userId: string) {
+    if (!confirm('Deseja excluir este usuario? Essa acao nao pode ser desfeita.')) {
+      return;
+    }
+    setError('');
+    try {
+      const res = await fetch(`${API_URL}/users/${userId}/hard`, {
+        method: 'DELETE',
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+      if (!res.ok) throw new Error('Falha');
+      await load();
+    } catch (err) {
+      setError('Nao foi possivel excluir usuario.');
     }
   }
 
@@ -140,9 +168,21 @@ export default function UsuariosPage() {
                     <td style={{ padding: '10px 0' }}>{item.fullName}</td>
                     <td style={{ padding: '10px 0' }}>{item.email}</td>
                     <td style={{ padding: '10px 0' }}>
-                      <button className="button" type="button" onClick={() => handleApprove(item.id)}>
-                        Aprovar
-                      </button>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                        <button className="button" type="button" onClick={() => handleApprove(item.id)}>
+                          Aprovar
+                        </button>
+                        {item.id !== currentUserId ? (
+                          <button
+                            className="button"
+                            type="button"
+                            onClick={() => handleDelete(item.id)}
+                            style={{ background: 'var(--danger)', borderColor: 'var(--danger)' }}
+                          >
+                            Excluir
+                          </button>
+                        ) : null}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -162,6 +202,7 @@ export default function UsuariosPage() {
                 <th style={{ paddingBottom: 8 }}>Nome</th>
                 <th style={{ paddingBottom: 8 }}>Email</th>
                 <th style={{ paddingBottom: 8 }}>Status</th>
+                <th style={{ paddingBottom: 8 }}>Acao</th>
               </tr>
             </thead>
             <tbody>
@@ -170,6 +211,18 @@ export default function UsuariosPage() {
                   <td style={{ padding: '10px 0' }}>{item.fullName}</td>
                   <td style={{ padding: '10px 0' }}>{item.email}</td>
                   <td style={{ padding: '10px 0' }}>{item.active ? 'Ativo' : 'Inativo'}</td>
+                  <td style={{ padding: '10px 0' }}>
+                    {item.id !== currentUserId ? (
+                      <button
+                        className="button"
+                        type="button"
+                        onClick={() => handleDelete(item.id)}
+                        style={{ background: 'var(--danger)', borderColor: 'var(--danger)' }}
+                      >
+                        Excluir
+                      </button>
+                    ) : null}
+                  </td>
                 </tr>
               ))}
             </tbody>
