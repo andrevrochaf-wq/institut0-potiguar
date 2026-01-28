@@ -46,6 +46,7 @@ export default function EstabelecimentosPage() {
   const [inepCode, setInepCode] = useState('');
   const [cityId, setCityId] = useState('');
   const [token, setToken] = useState<string | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
 
   const [selectedId, setSelectedId] = useState('');
   const [stages, setStages] = useState<Stage[]>([]);
@@ -166,6 +167,7 @@ export default function EstabelecimentosPage() {
       setName('');
       setInepCode('');
       setCityId('');
+      setFormOpen(false);
       await load();
     } catch (err) {
       setError(
@@ -270,111 +272,183 @@ export default function EstabelecimentosPage() {
   }
 
   return (
-    <section className="card" style={{ padding: 22, display: 'grid', gap: 18 }}>
-      <div>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 26 }}>
-          Estabelecimentos
-        </h1>
-        <p className="muted" style={{ marginTop: 8 }}>
-          Cadastro completo com etapas, turmas e totais automaticos.
-        </p>
+    <section className="ip-page" style={{ display: 'grid', gap: 16 }}>
+      <div className="panel panel--flat">
+        <div className="panel-header">
+          <div className="toolbar ip-toolbar">
+            <div style={{ display: 'grid', gap: 6 }}>
+              <h1 className="ip-page-title">Estabelecimentos</h1>
+              <span className="ip-page-subtitle">
+                Cadastro completo com etapas, turmas e totais automaticos.
+              </span>
+            </div>
+            <div className="toolbar-actions">
+              <button
+                className="button"
+                type="button"
+                onClick={() => {
+                  setFormOpen((prev) => !prev);
+                  const form = document.getElementById('novo-estabelecimento');
+                  if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              >
+                {formOpen ? 'Fechar' : '+ Novo Estabelecimento'}
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <form onSubmit={handleCreate} style={{ display: 'grid', gap: 12 }}>
-        <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
-          <label style={{ display: 'grid', gap: 6 }}>
-            Nome do estabelecimento
-            <input
-              className="input"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              required
-            />
-          </label>
-          <label style={{ display: 'grid', gap: 6 }}>
-            Codigo INEP
-            <input
-              className="input"
-              value={inepCode}
-              onChange={(event) => setInepCode(event.target.value)}
-            />
-          </label>
-          <label style={{ display: 'grid', gap: 6 }}>
-            Cidade
-            <select
-              className="input"
-              value={cityId}
-              onChange={(event) => setCityId(event.target.value)}
-            >
-              <option value="">Selecione</option>
-              {cities.map((city) => (
-                <option key={city.id} value={city.id}>
-                  {city.name} / {city.state}
-                </option>
-              ))}
-            </select>
-          </label>
+      <div className="panel panel--tint">
+        <div className="panel-body">
+          <div className="ip-section-title">
+            <div className="ip-section-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M11 19a8 8 0 1 1 5.292-14.04L20 8.668"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M16.2 16.2L20 20"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+            <strong>Filtros de Pesquisa</strong>
+          </div>
+          <div className="filter-grid ip-filter-grid">
+            <label className="ip-field">
+              <span className="ip-field-label">Nome</span>
+              <input
+                className="input"
+                placeholder="Buscar por nome"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </label>
+            <button className="button ip-filter-button" type="button" onClick={load}>
+              Buscar
+            </button>
+          </div>
         </div>
-        <button className="button" type="submit">
-          Salvar estabelecimento
-        </button>
-      </form>
-
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
-        <input
-          className="input"
-          placeholder="Buscar por nome"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-        <button className="button secondary" type="button" onClick={load}>
-          Buscar
-        </button>
       </div>
 
-      {error ? <p style={{ color: 'var(--danger)' }}>{error}</p> : null}
+      <div className="panel">
+        {error ? <p style={{ color: 'var(--danger)', padding: 16 }}>{error}</p> : null}
 
-      {loading ? (
-        <p className="muted">Carregando...</p>
-      ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ textAlign: 'left' }}>
-                <th style={{ paddingBottom: 8 }}>Nome</th>
-                <th style={{ paddingBottom: 8 }}>INEP</th>
-                <th style={{ paddingBottom: 8 }}>Cidade</th>
-                <th style={{ paddingBottom: 8 }}>Turmas</th>
-                <th style={{ paddingBottom: 8 }}>Alunos</th>
-                <th style={{ paddingBottom: 8 }}>Status</th>
-                <th style={{ paddingBottom: 8 }}>Criado</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => {
-                const city = cities.find((entry) => entry.id === item.cityId);
-                return (
-                  <tr key={item.id} style={{ borderTop: '1px solid var(--border)' }}>
-                    <td style={{ padding: '10px 0' }}>{item.name}</td>
-                    <td style={{ padding: '10px 0' }}>{item.inepCode ?? '-'}</td>
-                    <td style={{ padding: '10px 0' }}>
-                      {city ? `${city.name} / ${city.state}` : '-'}
-                    </td>
-                    <td style={{ padding: '10px 0' }}>{item.totalClasses ?? 0}</td>
-                    <td style={{ padding: '10px 0' }}>{item.totalStudents ?? 0}</td>
-                    <td style={{ padding: '10px 0' }}>{item.status}</td>
-                    <td style={{ padding: '10px 0' }}>
-                      {new Date(item.createdAt).toLocaleDateString('pt-BR')}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        {loading ? (
+          <p className="pill" style={{ padding: 16 }}>
+            Carregando...
+          </p>
+        ) : (
+          <div style={{ overflowX: 'auto', padding: 16 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ textAlign: 'left' }}>
+                  <th style={{ paddingBottom: 8 }}>Nome</th>
+                  <th style={{ paddingBottom: 8 }}>INEP</th>
+                  <th style={{ paddingBottom: 8 }}>Cidade</th>
+                  <th style={{ paddingBottom: 8 }}>Turmas</th>
+                  <th style={{ paddingBottom: 8 }}>Alunos</th>
+                  <th style={{ paddingBottom: 8 }}>Status</th>
+                  <th style={{ paddingBottom: 8 }}>Criado</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item) => {
+                  const city = cities.find((entry) => entry.id === item.cityId);
+                  return (
+                    <tr key={item.id} style={{ borderTop: '1px solid var(--border)' }}>
+                      <td style={{ padding: '10px 0' }}>{item.name}</td>
+                      <td style={{ padding: '10px 0' }}>{item.inepCode ?? '-'}</td>
+                      <td style={{ padding: '10px 0' }}>
+                        {city ? `${city.name} / ${city.state}` : '-'}
+                      </td>
+                      <td style={{ padding: '10px 0' }}>{item.totalClasses ?? 0}</td>
+                      <td style={{ padding: '10px 0' }}>{item.totalStudents ?? 0}</td>
+                      <td style={{ padding: '10px 0' }}>{item.status}</td>
+                      <td style={{ padding: '10px 0' }}>
+                        {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {formOpen ? (
+        <div className="panel">
+          <div className="panel-header">
+            <strong>Novo estabelecimento</strong>
+          </div>
+          <form
+            id="novo-estabelecimento"
+            onSubmit={handleCreate}
+            className="panel-body"
+            style={{ display: 'grid', gap: 12 }}
+          >
+            <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
+              <label style={{ display: 'grid', gap: 6 }}>
+                Nome do estabelecimento
+                <input
+                  className="input"
+                  value={name}
+                  onChange={(event) => setName(event.target.value)}
+                  required
+                />
+              </label>
+              <label style={{ display: 'grid', gap: 6 }}>
+                Codigo INEP
+                <input
+                  className="input"
+                  value={inepCode}
+                  onChange={(event) => setInepCode(event.target.value)}
+                />
+              </label>
+              <label style={{ display: 'grid', gap: 6 }}>
+                Cidade
+                <select
+                  className="input"
+                  value={cityId}
+                  onChange={(event) => setCityId(event.target.value)}
+                >
+                  <option value="">Selecione</option>
+                  {cities.map((city) => (
+                    <option key={city.id} value={city.id}>
+                      {city.name} / {city.state}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+              <button className="button" type="submit">
+                Salvar estabelecimento
+              </button>
+              <button className="button secondary" type="button" onClick={() => setFormOpen(false)}>
+                Cancelar
+              </button>
+            </div>
+          </form>
         </div>
-      )}
+      ) : null}
 
-      <section className="card" style={{ padding: 18, display: 'grid', gap: 16 }}>
+      <section className="panel">
+        <div className="panel-header">
+          <div style={{ display: 'grid', gap: 6 }}>
+            <strong>Etapas e Turmas</strong>
+            <span className="ip-page-subtitle">Cadastre categorias/etapas e as turmas por turno.</span>
+          </div>
+        </div>
+        <div className="panel-body" style={{ display: 'grid', gap: 16 }}>
         <div>
           <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 20 }}>
             Etapas e Turmas
@@ -384,21 +458,21 @@ export default function EstabelecimentosPage() {
           </p>
         </div>
 
-        <label style={{ display: 'grid', gap: 6, maxWidth: 360 }}>
-          Estabelecimento
-          <select
-            className="input"
-            value={selectedId}
-            onChange={(event) => handleSelectEstablishment(event.target.value)}
-          >
-            <option value="">Selecione</option>
-            {items.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </select>
-        </label>
+          <label style={{ display: 'grid', gap: 6, maxWidth: 360 }}>
+            Estabelecimento
+            <select
+              className="input"
+              value={selectedId}
+              onChange={(event) => handleSelectEstablishment(event.target.value)}
+            >
+              <option value="">Selecione</option>
+              {items.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </label>
 
         {selectedId ? (
           <>
@@ -531,9 +605,10 @@ export default function EstabelecimentosPage() {
               </div>
             )}
           </>
-        ) : (
-          <p className="muted">Selecione um estabelecimento para gerenciar etapas.</p>
-        )}
+          ) : (
+            <p className="muted">Selecione um estabelecimento para gerenciar etapas.</p>
+          )}
+        </div>
       </section>
     </section>
   );
