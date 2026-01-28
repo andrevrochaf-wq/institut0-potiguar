@@ -253,16 +253,101 @@ export default function FornecedoresPage() {
   }
 
   return (
-    <section className="panel" style={{ padding: 20, display: 'grid', gap: 16 }}>
-      <div className="panel-header">
-        <strong>Novo Fornecedor</strong>
+    <section className="ip-page" style={{ display: 'grid', gap: 16 }}>
+      <div className="panel panel--flat">
+        <div className="panel-header">
+          <div className="toolbar ip-toolbar">
+            <div style={{ display: 'grid', gap: 6 }}>
+              <h1 className="ip-page-title">Fornecedores</h1>
+              <span className="ip-page-subtitle">Cadastro completo e vinculo por municipio.</span>
+            </div>
+            <div className="toolbar-actions">
+              <button
+                className="button"
+                type="button"
+                onClick={() => {
+                  const form = document.getElementById('novo-fornecedor');
+                  if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              >
+                + Novo Fornecedor
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <form
-        onSubmit={editingId ? handleUpdate : handleCreate}
-        className="panel-body"
-        style={{ display: 'grid', gap: 16 }}
-      >
+      <div className="panel panel--tint">
+        <div className="panel-body">
+          <div className="ip-section-title">
+            <div className="ip-section-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M11 19a8 8 0 1 1 5.292-14.04L20 8.668"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M16.2 16.2L20 20"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+            <strong>Filtros de Pesquisa</strong>
+          </div>
+          <div className="filter-grid ip-filter-grid">
+            <label className="ip-field">
+              <span className="ip-field-label">Nome</span>
+              <input
+                className="input"
+                placeholder="Buscar por nome"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </label>
+            <label className="ip-field">
+              <span className="ip-field-label">Documento</span>
+              <input
+                className="input"
+                placeholder="CPF ou CNPJ"
+                value={documentFilter}
+                onChange={(e) => setDocumentFilter(e.target.value)}
+              />
+            </label>
+            <label className="ip-field">
+              <span className="ip-field-label">Status</span>
+              <select
+                className="input"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="all">Todos</option>
+                <option value="active">Ativos</option>
+                <option value="inactive">Inativos</option>
+              </select>
+            </label>
+            <button className="button ip-filter-button" type="button" onClick={load}>
+              Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="panel">
+        <div className="panel-header">
+          <strong>Novo Fornecedor</strong>
+        </div>
+
+        <form
+          id="novo-fornecedor"
+          onSubmit={editingId ? handleUpdate : handleCreate}
+          className="panel-body"
+          style={{ display: 'grid', gap: 16 }}
+        >
         <div style={{ display: 'grid', gap: 10 }}>
           <strong>Informacoes Basicas</strong>
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
@@ -318,19 +403,19 @@ export default function FornecedoresPage() {
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
             <label style={{ display: 'grid', gap: 6 }}>
               Codigo do Banco
-              <input className="input" value={bankCode} onChange={(e) => setBankCode(e.target.value)} required />
+              <input className="input" value={bankCode} onChange={(e) => setBankCode(e.target.value)} />
             </label>
             <label style={{ display: 'grid', gap: 6 }}>
               Nome do Banco
-              <input className="input" value={bankName} onChange={(e) => setBankName(e.target.value)} required />
+              <input className="input" value={bankName} onChange={(e) => setBankName(e.target.value)} />
             </label>
             <label style={{ display: 'grid', gap: 6 }}>
               Agencia
-              <input className="input" value={agency} onChange={(e) => setAgency(e.target.value)} required />
+              <input className="input" value={agency} onChange={(e) => setAgency(e.target.value)} />
             </label>
             <label style={{ display: 'grid', gap: 6 }}>
               Conta
-              <input className="input" value={account} onChange={(e) => setAccount(e.target.value)} required />
+              <input className="input" value={account} onChange={(e) => setAccount(e.target.value)} />
             </label>
           </div>
         </div>
@@ -344,7 +429,6 @@ export default function FornecedoresPage() {
                 className="input"
                 value={pixType}
                 onChange={(e) => setPixType(e.target.value)}
-                required
               >
                 <option value="">Selecione</option>
                 {PIX_TYPES.map((type) => (
@@ -356,7 +440,7 @@ export default function FornecedoresPage() {
             </label>
             <label style={{ display: 'grid', gap: 6 }}>
               Chave PIX
-              <input className="input" value={pixKey} onChange={(e) => setPixKey(e.target.value)} required />
+              <input className="input" value={pixKey} onChange={(e) => setPixKey(e.target.value)} />
             </label>
           </div>
         </div>
@@ -430,106 +514,84 @@ export default function FornecedoresPage() {
             </button>
           ) : null}
         </div>
-      </form>
-
-      <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-        <input
-          className="input"
-          placeholder="Buscar por nome"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <input
-          className="input"
-          placeholder="Documento"
-          value={documentFilter}
-          onChange={(e) => setDocumentFilter(e.target.value)}
-        />
-        <select
-          className="input"
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="all">Todos</option>
-          <option value="active">Ativos</option>
-          <option value="inactive">Inativos</option>
-        </select>
-        <button className="button secondary" type="button" onClick={load}>
-          Buscar
-        </button>
+        </form>
       </div>
 
-      {error ? <p style={{ color: 'var(--danger)' }}>{error}</p> : null}
+      <div className="panel">
+        {error ? <p style={{ color: 'var(--danger)', padding: 16 }}>{error}</p> : null}
 
-      {loading ? (
-        <p className="pill">Carregando...</p>
-      ) : (
-        <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <thead>
-              <tr style={{ textAlign: 'left' }}>
-                <th style={{ paddingBottom: 8 }}>Nome</th>
-                <th style={{ paddingBottom: 8 }}>Documento</th>
-                <th style={{ paddingBottom: 8 }}>Contrato</th>
-                <th style={{ paddingBottom: 8 }}>Municipios</th>
-                <th style={{ paddingBottom: 8 }}>Status</th>
-                <th style={{ paddingBottom: 8 }}>Criado</th>
-                <th style={{ paddingBottom: 8 }}>Acoes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((item) => (
-                <tr key={item.id} style={{ borderTop: '1px solid var(--border)' }}>
-                  <td style={{ padding: '10px 0' }}>{item.name}</td>
-                  <td style={{ padding: '10px 0' }}>{item.document ?? '-'}</td>
-                  <td style={{ padding: '10px 0' }}>{item.contractType ?? '-'}</td>
-                  <td style={{ padding: '10px 0' }}>{item.cityIds?.length ?? 0}</td>
-                  <td style={{ padding: '10px 0' }}>{item.status}</td>
-                  <td style={{ padding: '10px 0' }}>
-                    {new Date(item.createdAt).toLocaleDateString('pt-BR')}
-                  </td>
-                  <td style={{ padding: '10px 0' }}>
-                    <div style={{ display: 'flex', gap: 8 }}>
-                      <button
-                        className="button secondary"
-                        type="button"
-                        onClick={() => {
-                          setEditingId(item.id);
-                          setName(item.name);
-                          setDocumentRaw(item.document ?? '');
-                          setContractType(item.contractType ?? '');
-                          setDescription(item.description ?? '');
-                          setBankCode(item.bankCode ?? '');
-                          setBankName(item.bankName ?? '');
-                          setAgency(item.agency ?? '');
-                          setAccount(item.account ?? '');
-                          setPixType(item.pixType ?? '');
-                          setPixKey(item.pixKey ?? '');
-                          setCityIds(item.cityIds ?? []);
-                          setPhone(item.phone ?? '');
-                          setEmail(item.email ?? '');
-                          setAddress(item.address ?? '');
-                        }}
-                      >
-                        Editar
-                      </button>
-                      {item.status === 'active' ? (
-                        <button
-                          className="button danger"
-                          type="button"
-                          onClick={() => handleDeactivate(item.id)}
-                        >
-                          Inativar
-                        </button>
-                      ) : null}
-                    </div>
-                  </td>
+        {loading ? (
+          <p className="pill" style={{ padding: 16 }}>
+            Carregando...
+          </p>
+        ) : (
+          <div style={{ overflowX: 'auto', padding: 16 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ textAlign: 'left' }}>
+                  <th style={{ paddingBottom: 8 }}>Nome</th>
+                  <th style={{ paddingBottom: 8 }}>Documento</th>
+                  <th style={{ paddingBottom: 8 }}>Contrato</th>
+                  <th style={{ paddingBottom: 8 }}>Municipios</th>
+                  <th style={{ paddingBottom: 8 }}>Status</th>
+                  <th style={{ paddingBottom: 8 }}>Criado</th>
+                  <th style={{ paddingBottom: 8 }}>Acoes</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr key={item.id} style={{ borderTop: '1px solid var(--border)' }}>
+                    <td style={{ padding: '10px 0' }}>{item.name}</td>
+                    <td style={{ padding: '10px 0' }}>{item.document ?? '-'}</td>
+                    <td style={{ padding: '10px 0' }}>{item.contractType ?? '-'}</td>
+                    <td style={{ padding: '10px 0' }}>{item.cityIds?.length ?? 0}</td>
+                    <td style={{ padding: '10px 0' }}>{item.status}</td>
+                    <td style={{ padding: '10px 0' }}>
+                      {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                    </td>
+                    <td style={{ padding: '10px 0' }}>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <button
+                          className="button secondary"
+                          type="button"
+                          onClick={() => {
+                            setEditingId(item.id);
+                            setName(item.name);
+                            setDocumentRaw(item.document ?? '');
+                            setContractType(item.contractType ?? '');
+                            setDescription(item.description ?? '');
+                            setBankCode(item.bankCode ?? '');
+                            setBankName(item.bankName ?? '');
+                            setAgency(item.agency ?? '');
+                            setAccount(item.account ?? '');
+                            setPixType(item.pixType ?? '');
+                            setPixKey(item.pixKey ?? '');
+                            setCityIds(item.cityIds ?? []);
+                            setPhone(item.phone ?? '');
+                            setEmail(item.email ?? '');
+                            setAddress(item.address ?? '');
+                          }}
+                        >
+                          Editar
+                        </button>
+                        {item.status === 'active' ? (
+                          <button
+                            className="button danger"
+                            type="button"
+                            onClick={() => handleDeactivate(item.id)}
+                          >
+                            Inativar
+                          </button>
+                        ) : null}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </section>
   );
 }
