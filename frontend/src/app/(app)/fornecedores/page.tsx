@@ -140,14 +140,6 @@ export default function FornecedoresPage() {
       setError('Selecione o tipo de contrato.');
       return;
     }
-    if (!bankCode || !bankName || !agency || !account) {
-      setError('Preencha os dados bancarios obrigatorios.');
-      return;
-    }
-    if (!pixType || !pixKey) {
-      setError('Preencha os dados PIX obrigatorios.');
-      return;
-    }
     if (!cityIds.length) {
       setError('Selecione ao menos um municipio.');
       return;
@@ -322,32 +314,32 @@ export default function FornecedoresPage() {
         </div>
 
         <div style={{ display: 'grid', gap: 10 }}>
-          <strong>Dados Bancarios</strong>
+          <strong>Dados Bancarios (opcional)</strong>
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
             <label style={{ display: 'grid', gap: 6 }}>
-              Codigo do Banco *
+              Codigo do Banco
               <input className="input" value={bankCode} onChange={(e) => setBankCode(e.target.value)} required />
             </label>
             <label style={{ display: 'grid', gap: 6 }}>
-              Nome do Banco *
+              Nome do Banco
               <input className="input" value={bankName} onChange={(e) => setBankName(e.target.value)} required />
             </label>
             <label style={{ display: 'grid', gap: 6 }}>
-              Agencia *
+              Agencia
               <input className="input" value={agency} onChange={(e) => setAgency(e.target.value)} required />
             </label>
             <label style={{ display: 'grid', gap: 6 }}>
-              Conta *
+              Conta
               <input className="input" value={account} onChange={(e) => setAccount(e.target.value)} required />
             </label>
           </div>
         </div>
 
         <div style={{ display: 'grid', gap: 10 }}>
-          <strong>Dados PIX</strong>
+          <strong>Dados PIX (opcional)</strong>
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))' }}>
             <label style={{ display: 'grid', gap: 6 }}>
-              Tipo da Chave PIX *
+              Tipo da Chave PIX
               <select
                 className="input"
                 value={pixType}
@@ -363,7 +355,7 @@ export default function FornecedoresPage() {
               </select>
             </label>
             <label style={{ display: 'grid', gap: 6 }}>
-              Chave PIX *
+              Chave PIX
               <input className="input" value={pixKey} onChange={(e) => setPixKey(e.target.value)} required />
             </label>
           </div>

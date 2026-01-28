@@ -17,23 +17,29 @@ export class CreateProviderDto {
   @IsString()
   description?: string;
 
+  @IsOptional()
   @IsString()
-  bankCode: string;
+  bankCode?: string;
 
+  @IsOptional()
   @IsString()
-  bankName: string;
+  bankName?: string;
 
+  @IsOptional()
   @IsString()
-  agency: string;
+  agency?: string;
 
+  @IsOptional()
   @IsString()
-  account: string;
+  account?: string;
 
+  @IsOptional()
   @IsString()
-  pixType: string;
+  pixType?: string;
 
+  @IsOptional()
   @IsString()
-  pixKey: string;
+  pixKey?: string;
 
   @IsArray()
   @ArrayNotEmpty()
