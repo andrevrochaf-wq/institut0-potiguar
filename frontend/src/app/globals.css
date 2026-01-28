@@ -377,6 +377,62 @@ textarea {
   min-height: 44px;
 }
 
+@media (max-width: 960px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .toolbar-actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .toolbar-actions .button,
+  .toolbar-actions .input,
+  .toolbar-actions select {
+    flex: 1 1 160px;
+    min-width: 160px;
+  }
+
+  .filter-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .panel-header,
+  .panel-body {
+    padding: 14px 16px;
+  }
+
+  .toolbar-actions {
+    width: 100%;
+  }
+
+  .toolbar-actions .button,
+  .toolbar-actions .input,
+  .toolbar-actions select {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  .filter-grid,
+  .ip-filter-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  table {
+    min-width: 640px;
+  }
+}
+
 .empty-state {
   min-height: 260px;
   display: grid;
