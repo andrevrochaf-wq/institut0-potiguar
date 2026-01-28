@@ -101,7 +101,7 @@ export default function UsuariosPage() {
     }
     setError('');
     try {
-      const res = await fetch(`${API_URL}/users/${userId}/hard`, {
+      const res = await fetch(`${API_URL}/users/${userId}`, {
         method: 'DELETE',
         headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       });

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -24,6 +24,16 @@ export class UsersController {
 
   @Delete(':id')
   @Permissions('usuarios.update')
+  async delete(@Param('id') id: string, @Req() req: { user?: { userId?: string } }) {
+    if (req.user?.userId === id) {
+      throw new BadRequestException('Nao e possivel excluir o proprio usuario.');
+    }
+    await this.usersService.deleteUser(id);
+    return { status: 'ok' };
+  }
+
+  @Post(':id/deactivate')
+  @Permissions('usuarios.update')
   async deactivate(@Param('id') id: string) {
     await this.usersService.deactivate(id);
     return { status: 'ok' };
@@ -42,4 +52,6 @@ export class UsersController {
     await this.usersService.assignRole(id, roleName);
     return { status: 'ok' };
   }
+
+  // hard delete handled by DELETE /users/:id
 }
