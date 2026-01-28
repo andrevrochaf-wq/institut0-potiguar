@@ -61,7 +61,7 @@ export default function ServicosPage() {
           'Content-Type': 'application/json',
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ name, description: description || undefined }),
+        body: JSON.stringify({ name, description }),
       });
       if (!res.ok) throw new Error('Falha');
       setName('');
@@ -131,11 +131,12 @@ export default function ServicosPage() {
             <input className="input" value={name} onChange={(e) => setName(e.target.value)} required />
           </label>
           <label style={{ display: 'grid', gap: 6 }}>
-            Descricao
+            Descricao *
             <input
               className="input"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
+              required
             />
           </label>
         </div>
