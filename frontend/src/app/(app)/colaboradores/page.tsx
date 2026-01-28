@@ -215,13 +215,14 @@ export default function ColaboradoresPage() {
   }
 
   return (
-    <section style={{ display: 'grid', gap: 16 }}>
-      <div className="panel">
+    <section className="ip-page" style={{ display: 'grid', gap: 16 }}>
+      <div className="panel panel--flat">
         <div className="panel-header">
-          <div className="toolbar">
-            <h1 style={{ fontSize: 20, color: 'var(--primary)' }}>
-              Gerenciamento de Colaboradores
-            </h1>
+          <div className="toolbar ip-toolbar">
+            <div style={{ display: 'grid', gap: 6 }}>
+              <h1 className="ip-page-title">Gerenciamento de Colaboradores</h1>
+              <span className="ip-page-subtitle">Gestao, filtros e cadastro rapido.</span>
+            </div>
             <div className="toolbar-actions">
               <select className="input" value={month} onChange={(e) => setMonth(e.target.value)}>
                 {['Janeiro', 'Fevereiro', 'Marco', 'Abril', 'Maio', 'Junho', 'Julho'].map(
@@ -233,13 +234,20 @@ export default function ColaboradoresPage() {
                 )}
               </select>
               <select className="input" value={year} onChange={(e) => setYear(e.target.value)}>
-                {['2025', '2024', '2023'].map((value) => (
+                {['2026', '2025', '2024', '2023'].map((value) => (
                   <option key={value} value={value}>
                     {value}
                   </option>
                 ))}
               </select>
-              <button className="button" type="button">
+              <button
+                className="button"
+                type="button"
+                onClick={() => {
+                  const form = document.getElementById('novo-colaborador');
+                  if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+              >
                 + Adicionar Colaborador
               </button>
             </div>
@@ -247,10 +255,143 @@ export default function ColaboradoresPage() {
         </div>
       </div>
 
+      <div className="panel panel--tint">
+        <div className="panel-body">
+          <div className="ip-section-title">
+            <div className="ip-section-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M11 19a8 8 0 1 1 5.292-14.04L20 8.668"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M16.2 16.2L20 20"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+            <strong>Filtros de Pesquisa</strong>
+          </div>
+
+          <div className="filter-grid ip-filter-grid">
+            <label className="ip-field">
+              <span className="ip-field-label">Nome</span>
+              <input
+                className="input"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Buscar por nome"
+              />
+            </label>
+            <label className="ip-field">
+              <span className="ip-field-label">Cidade</span>
+              <select
+                className="input"
+                value={cityFilter}
+                onChange={(event) => setCityFilter(event.target.value)}
+              >
+                <option value="">Todos</option>
+                {cities.map((city) => (
+                  <option key={city.id} value={city.id}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="ip-field">
+              <span className="ip-field-label">Situacao</span>
+              <select
+                className="input"
+                value={statusFilter}
+                onChange={(event) => setStatusFilter(event.target.value)}
+              >
+                <option value="all">Todos</option>
+                <option value="active">Ativo</option>
+                <option value="inactive">Inativo</option>
+              </select>
+            </label>
+            <label className="ip-field">
+              <span className="ip-field-label">Banco</span>
+              <input
+                className="input"
+                value={bankFilter}
+                onChange={(event) => setBankFilter(event.target.value)}
+              />
+            </label>
+            <label className="ip-field">
+              <span className="ip-field-label">Projeto</span>
+              <select
+                className="input"
+                value={projectFilter}
+                onChange={(event) => setProjectFilter(event.target.value)}
+              >
+                <option value="">Todos</option>
+                {projects.map((project) => (
+                  <option key={project.id} value={project.id}>
+                    {project.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="ip-field">
+              <span className="ip-field-label">Tipo de Contrato</span>
+              <select
+                className="input"
+                value={contractTypeFilter}
+                onChange={(event) => setContractTypeFilter(event.target.value)}
+              >
+                <option value="">Todos</option>
+                <option value="RPA">RPA</option>
+                <option value="MEI">MEI</option>
+                <option value="CLT">CLT</option>
+              </select>
+            </label>
+            <label className="ip-field">
+              <span className="ip-field-label">Estabelecimento</span>
+              <select
+                className="input"
+                value={establishmentFilter}
+                onChange={(event) => setEstablishmentFilter(event.target.value)}
+              >
+                <option value="">Todos</option>
+                {establishments.map((establishment) => (
+                  <option key={establishment.id} value={establishment.id}>
+                    {establishment.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="ip-field">
+              <span className="ip-field-label">Servico</span>
+              <select
+                className="input"
+                value={serviceFilter}
+                onChange={(event) => setServiceFilter(event.target.value)}
+              >
+                <option value="">Todos</option>
+                {services.map((service) => (
+                  <option key={service.id} value={service.id}>
+                    {service.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <button className="button ip-filter-button" type="button" onClick={load}>
+              Buscar
+            </button>
+          </div>
+        </div>
+      </div>
+
       <div className="panel">
         <div className="panel-body">
           <h2 style={{ fontSize: 18, marginBottom: 12 }}>Novo colaborador</h2>
-          <form onSubmit={handleCreate} style={{ display: 'grid', gap: 12 }}>
+          <form id="novo-colaborador" onSubmit={handleCreate} style={{ display: 'grid', gap: 12 }}>
             <div className="filter-grid" style={{ gap: 12 }}>
               <label style={{ display: 'grid', gap: 6 }}>
                 Nome completo
@@ -419,149 +560,6 @@ export default function ColaboradoresPage() {
               Salvar colaborador
             </button>
           </form>
-        </div>
-      </div>
-
-      <div className="panel">
-        <div className="panel-body">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-            <div
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: 999,
-                background: '#eef5f0',
-                display: 'grid',
-                placeItems: 'center',
-                color: 'var(--primary)',
-              }}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M11 19a8 8 0 1 1 5.292-14.04L20 8.668"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M16.2 16.2L20 20"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-            <strong style={{ color: 'var(--primary)' }}>Filtros de Pesquisa</strong>
-          </div>
-
-          <div className="filter-grid">
-            <label style={{ display: 'grid', gap: 6 }}>
-              <span className="pill">Nome</span>
-              <input
-                className="input"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="Buscar por nome"
-              />
-            </label>
-            <label style={{ display: 'grid', gap: 6 }}>
-              <span className="pill">Cidade</span>
-              <select
-                className="input"
-                value={cityFilter}
-                onChange={(event) => setCityFilter(event.target.value)}
-              >
-                <option value="">Todos</option>
-                {cities.map((city) => (
-                  <option key={city.id} value={city.id}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label style={{ display: 'grid', gap: 6 }}>
-              <span className="pill">Situacao</span>
-              <select
-                className="input"
-                value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value)}
-              >
-                <option value="all">Todos</option>
-                <option value="active">Ativo</option>
-                <option value="inactive">Inativo</option>
-              </select>
-            </label>
-            <label style={{ display: 'grid', gap: 6 }}>
-              <span className="pill">Banco</span>
-              <input
-                className="input"
-                value={bankFilter}
-                onChange={(event) => setBankFilter(event.target.value)}
-              />
-            </label>
-            <label style={{ display: 'grid', gap: 6 }}>
-              <span className="pill">Projeto</span>
-              <select
-                className="input"
-                value={projectFilter}
-                onChange={(event) => setProjectFilter(event.target.value)}
-              >
-                <option value="">Todos</option>
-                {projects.map((project) => (
-                  <option key={project.id} value={project.id}>
-                    {project.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label style={{ display: 'grid', gap: 6 }}>
-              <span className="pill">Tipo de Contrato</span>
-              <select
-                className="input"
-                value={contractTypeFilter}
-                onChange={(event) => setContractTypeFilter(event.target.value)}
-              >
-                <option value="">Todos</option>
-                <option value="RPA">RPA</option>
-                <option value="MEI">MEI</option>
-                <option value="CLT">CLT</option>
-              </select>
-            </label>
-            <label style={{ display: 'grid', gap: 6 }}>
-              <span className="pill">Estabelecimento</span>
-              <select
-                className="input"
-                value={establishmentFilter}
-                onChange={(event) => setEstablishmentFilter(event.target.value)}
-              >
-                <option value="">Todos</option>
-                {establishments.map((establishment) => (
-                  <option key={establishment.id} value={establishment.id}>
-                    {establishment.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label style={{ display: 'grid', gap: 6 }}>
-              <span className="pill">Servico</span>
-              <select
-                className="input"
-                value={serviceFilter}
-                onChange={(event) => setServiceFilter(event.target.value)}
-              >
-                <option value="">Todos</option>
-                {services.map((service) => (
-                  <option key={service.id} value={service.id}>
-                    {service.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <button className="button" type="button" onClick={load} style={{ alignSelf: 'end' }}>
-              Buscar
-            </button>
-          </div>
         </div>
       </div>
 
