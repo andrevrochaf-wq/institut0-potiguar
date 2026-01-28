@@ -77,6 +77,7 @@ export default function FornecedoresPage() {
   const [email, setEmail] = useState('');
   const [address, setAddress] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [formOpen, setFormOpen] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
   const documentDisplay = useMemo(() => formatDocument(documentRaw), [documentRaw]);
@@ -250,6 +251,7 @@ export default function FornecedoresPage() {
     setEmail('');
     setAddress('');
     setEditingId(null);
+    setFormOpen(false);
   }
 
   return (
@@ -266,11 +268,12 @@ export default function FornecedoresPage() {
                 className="button"
                 type="button"
                 onClick={() => {
+                  setFormOpen((prev) => !prev);
                   const form = document.getElementById('novo-fornecedor');
                   if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
               >
-                + Novo Fornecedor
+                {formOpen ? 'Fechar' : '+ Novo Fornecedor'}
               </button>
             </div>
           </div>
@@ -413,17 +416,18 @@ export default function FornecedoresPage() {
         )}
       </div>
 
-      <div className="panel">
-        <div className="panel-header">
-          <strong>Novo Fornecedor</strong>
-        </div>
+      {formOpen ? (
+        <div className="panel">
+          <div className="panel-header">
+            <strong>{editingId ? 'Editar Fornecedor' : 'Novo Fornecedor'}</strong>
+          </div>
 
-        <form
-          id="novo-fornecedor"
-          onSubmit={editingId ? handleUpdate : handleCreate}
-          className="panel-body"
-          style={{ display: 'grid', gap: 16 }}
-        >
+          <form
+            id="novo-fornecedor"
+            onSubmit={editingId ? handleUpdate : handleCreate}
+            className="panel-body"
+            style={{ display: 'grid', gap: 16 }}
+          >
         <div style={{ display: 'grid', gap: 10 }}>
           <strong>Informacoes Basicas</strong>
           <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))' }}>
@@ -590,8 +594,9 @@ export default function FornecedoresPage() {
             </button>
           ) : null}
         </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      ) : null}
 
     </section>
   );
