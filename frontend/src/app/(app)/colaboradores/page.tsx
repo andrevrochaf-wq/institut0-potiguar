@@ -103,6 +103,7 @@ export default function ColaboradoresPage() {
   const [establishmentId, setEstablishmentId] = useState('');
   const [serviceId, setServiceId] = useState('');
   const [admissionDate, setAdmissionDate] = useState('');
+  const [formOpen, setFormOpen] = useState(false);
 
   async function load() {
     setLoading(true);
@@ -208,6 +209,7 @@ export default function ColaboradoresPage() {
       setEstablishmentId('');
       setServiceId('');
       setAdmissionDate('');
+      setFormOpen(false);
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Nao foi possivel salvar colaborador.');
@@ -244,11 +246,12 @@ export default function ColaboradoresPage() {
                 className="button"
                 type="button"
                 onClick={() => {
+                  setFormOpen((prev) => !prev);
                   const form = document.getElementById('novo-colaborador');
                   if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }}
               >
-                + Adicionar Colaborador
+                {formOpen ? 'Fechar' : '+ Adicionar Colaborador'}
               </button>
             </div>
           </div>
@@ -388,11 +391,14 @@ export default function ColaboradoresPage() {
         </div>
       </div>
 
-      <div className="panel">
-        <div className="panel-body">
-          <h2 style={{ fontSize: 18, marginBottom: 12 }}>Novo colaborador</h2>
-          <form id="novo-colaborador" onSubmit={handleCreate} style={{ display: 'grid', gap: 12 }}>
-            <div className="filter-grid" style={{ gap: 12 }}>
+      {formOpen ? (
+        <div className="panel">
+          <div className="panel-header">
+            <strong>Novo colaborador</strong>
+          </div>
+          <div className="panel-body">
+            <form id="novo-colaborador" onSubmit={handleCreate} style={{ display: 'grid', gap: 12 }}>
+              <div className="filter-grid" style={{ gap: 12 }}>
               <label style={{ display: 'grid', gap: 6 }}>
                 Nome completo
                 <input
@@ -555,13 +561,23 @@ export default function ColaboradoresPage() {
                   onChange={(event) => setAdmissionDate(event.target.value)}
                 />
               </label>
-            </div>
-            <button className="button" type="submit">
-              Salvar colaborador
-            </button>
-          </form>
+              </div>
+              <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+                <button className="button" type="submit">
+                  Salvar colaborador
+                </button>
+                <button
+                  className="button secondary"
+                  type="button"
+                  onClick={() => setFormOpen(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
+      ) : null}
 
       <div className="panel">
         {error ? <p style={{ color: 'var(--danger)', padding: 16 }}>{error}</p> : null}
