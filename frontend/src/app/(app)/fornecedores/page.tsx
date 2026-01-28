@@ -338,6 +338,82 @@ export default function FornecedoresPage() {
       </div>
 
       <div className="panel">
+        {error ? <p style={{ color: 'var(--danger)', padding: 16 }}>{error}</p> : null}
+
+        {loading ? (
+          <p className="pill" style={{ padding: 16 }}>
+            Carregando...
+          </p>
+        ) : (
+          <div style={{ overflowX: 'auto', padding: 16 }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead>
+                <tr style={{ textAlign: 'left' }}>
+                  <th style={{ paddingBottom: 8 }}>Nome</th>
+                  <th style={{ paddingBottom: 8 }}>Documento</th>
+                  <th style={{ paddingBottom: 8 }}>Contrato</th>
+                  <th style={{ paddingBottom: 8 }}>Municipios</th>
+                  <th style={{ paddingBottom: 8 }}>Status</th>
+                  <th style={{ paddingBottom: 8 }}>Criado</th>
+                  <th style={{ paddingBottom: 8 }}>Acoes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((item) => (
+                  <tr key={item.id} style={{ borderTop: '1px solid var(--border)' }}>
+                    <td style={{ padding: '10px 0' }}>{item.name}</td>
+                    <td style={{ padding: '10px 0' }}>{item.document ?? '-'}</td>
+                    <td style={{ padding: '10px 0' }}>{item.contractType ?? '-'}</td>
+                    <td style={{ padding: '10px 0' }}>{item.cityIds?.length ?? 0}</td>
+                    <td style={{ padding: '10px 0' }}>{item.status}</td>
+                    <td style={{ padding: '10px 0' }}>
+                      {new Date(item.createdAt).toLocaleDateString('pt-BR')}
+                    </td>
+                    <td style={{ padding: '10px 0' }}>
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <button
+                          className="button secondary"
+                          type="button"
+                          onClick={() => {
+                            setEditingId(item.id);
+                            setName(item.name);
+                            setDocumentRaw(item.document ?? '');
+                            setContractType(item.contractType ?? '');
+                            setDescription(item.description ?? '');
+                            setBankCode(item.bankCode ?? '');
+                            setBankName(item.bankName ?? '');
+                            setAgency(item.agency ?? '');
+                            setAccount(item.account ?? '');
+                            setPixType(item.pixType ?? '');
+                            setPixKey(item.pixKey ?? '');
+                            setCityIds(item.cityIds ?? []);
+                            setPhone(item.phone ?? '');
+                            setEmail(item.email ?? '');
+                            setAddress(item.address ?? '');
+                          }}
+                        >
+                          Editar
+                        </button>
+                        {item.status === 'active' ? (
+                          <button
+                            className="button danger"
+                            type="button"
+                            onClick={() => handleDeactivate(item.id)}
+                          >
+                            Inativar
+                          </button>
+                        ) : null}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      <div className="panel">
         <div className="panel-header">
           <strong>Novo Fornecedor</strong>
         </div>
@@ -517,81 +593,6 @@ export default function FornecedoresPage() {
         </form>
       </div>
 
-      <div className="panel">
-        {error ? <p style={{ color: 'var(--danger)', padding: 16 }}>{error}</p> : null}
-
-        {loading ? (
-          <p className="pill" style={{ padding: 16 }}>
-            Carregando...
-          </p>
-        ) : (
-          <div style={{ overflowX: 'auto', padding: 16 }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ textAlign: 'left' }}>
-                  <th style={{ paddingBottom: 8 }}>Nome</th>
-                  <th style={{ paddingBottom: 8 }}>Documento</th>
-                  <th style={{ paddingBottom: 8 }}>Contrato</th>
-                  <th style={{ paddingBottom: 8 }}>Municipios</th>
-                  <th style={{ paddingBottom: 8 }}>Status</th>
-                  <th style={{ paddingBottom: 8 }}>Criado</th>
-                  <th style={{ paddingBottom: 8 }}>Acoes</th>
-                </tr>
-              </thead>
-              <tbody>
-                {items.map((item) => (
-                  <tr key={item.id} style={{ borderTop: '1px solid var(--border)' }}>
-                    <td style={{ padding: '10px 0' }}>{item.name}</td>
-                    <td style={{ padding: '10px 0' }}>{item.document ?? '-'}</td>
-                    <td style={{ padding: '10px 0' }}>{item.contractType ?? '-'}</td>
-                    <td style={{ padding: '10px 0' }}>{item.cityIds?.length ?? 0}</td>
-                    <td style={{ padding: '10px 0' }}>{item.status}</td>
-                    <td style={{ padding: '10px 0' }}>
-                      {new Date(item.createdAt).toLocaleDateString('pt-BR')}
-                    </td>
-                    <td style={{ padding: '10px 0' }}>
-                      <div style={{ display: 'flex', gap: 8 }}>
-                        <button
-                          className="button secondary"
-                          type="button"
-                          onClick={() => {
-                            setEditingId(item.id);
-                            setName(item.name);
-                            setDocumentRaw(item.document ?? '');
-                            setContractType(item.contractType ?? '');
-                            setDescription(item.description ?? '');
-                            setBankCode(item.bankCode ?? '');
-                            setBankName(item.bankName ?? '');
-                            setAgency(item.agency ?? '');
-                            setAccount(item.account ?? '');
-                            setPixType(item.pixType ?? '');
-                            setPixKey(item.pixKey ?? '');
-                            setCityIds(item.cityIds ?? []);
-                            setPhone(item.phone ?? '');
-                            setEmail(item.email ?? '');
-                            setAddress(item.address ?? '');
-                          }}
-                        >
-                          Editar
-                        </button>
-                        {item.status === 'active' ? (
-                          <button
-                            className="button danger"
-                            type="button"
-                            onClick={() => handleDeactivate(item.id)}
-                          >
-                            Inativar
-                          </button>
-                        ) : null}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
     </section>
   );
 }
