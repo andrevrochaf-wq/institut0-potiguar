@@ -84,6 +84,10 @@ export class UsersService {
     await this.usersRepo.update(userId, { active: true });
   }
 
+  async deleteUser(userId: string): Promise<void> {
+    await this.usersRepo.delete(userId);
+  }
+
   async updatePassword(userId: string, password: string): Promise<void> {
     const passwordHash = await bcrypt.hash(password, 10);
     await this.usersRepo.update(userId, { passwordHash });
