@@ -13,9 +13,20 @@ export class ProvidersService {
   ) {}
 
   async create(dto: CreateProviderDto): Promise<Provider> {
+    const normalizedDocument = dto.document.replace(/\D/g, '');
+    const uniqueCityIds = dto.cityIds ? Array.from(new Set(dto.cityIds)) : null;
     const provider = this.providersRepo.create({
       name: dto.name,
-      document: dto.document ?? null,
+      document: normalizedDocument || null,
+      contractType: dto.contractType ?? null,
+      description: dto.description ?? null,
+      bankCode: dto.bankCode ?? null,
+      bankName: dto.bankName ?? null,
+      agency: dto.agency ?? null,
+      account: dto.account ?? null,
+      pixType: dto.pixType ?? null,
+      pixKey: dto.pixKey ?? null,
+      cityIds: uniqueCityIds,
       phone: dto.phone ?? null,
       email: dto.email ?? null,
       address: dto.address ?? null,
@@ -52,7 +63,13 @@ export class ProvidersService {
 
   async update(id: string, dto: UpdateProviderDto): Promise<Provider> {
     const provider = await this.findOne(id);
-    const updated = this.providersRepo.merge(provider, { ...dto });
+    const normalizedDocument = dto.document ? dto.document.replace(/\D/g, '') : undefined;
+    const uniqueCityIds = dto.cityIds ? Array.from(new Set(dto.cityIds)) : undefined;
+    const updated = this.providersRepo.merge(provider, {
+      ...dto,
+      document: normalizedDocument ?? provider.document,
+      cityIds: uniqueCityIds ?? provider.cityIds,
+    });
     return this.providersRepo.save(updated);
   }
 
